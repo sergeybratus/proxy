@@ -5,11 +5,12 @@
 #include <cstdint>
 
 #include "proxy/Config.h"
+#include "proxy/Uncopyable.h"
 
 namespace proxy
 {
     
-class Endpoint
+class Endpoint : private Uncopyable
 {
 
 public:
@@ -29,11 +30,10 @@ public:
 
 private:
   Endpoint() = delete;
-  Endpoint(const Endpoint&) = delete;
-  
+    
 };
    
-class Session
+class Session : private Uncopyable
 {
   
 public:
@@ -41,7 +41,11 @@ public:
   Session(const SessionConfig& config);
       
   Endpoint listening;
-  Endpoint connecting;    
+  Endpoint connecting; 
+  
+private:
+  Session() = delete;
+  
 };
   
   

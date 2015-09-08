@@ -8,13 +8,14 @@
 #include <vector>
 #include <memory>
 
-#include "Session.h"
-#include "Config.h"
+#include "proxy/Session.h"
+#include "proxy/Config.h"
+#include "proxy/Uncopyable.h"
 
 namespace proxy
 {
   
-class Proxy
+class Proxy : private Uncopyable
 {
   
 public:
@@ -25,8 +26,7 @@ public:
   
 private:
   
-  Proxy()  = delete;
-  Proxy(const Proxy&) = delete;
+  Proxy()  = delete;  
 
   // epoll instance fid
   int epoll_fid;
