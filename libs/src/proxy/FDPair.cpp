@@ -4,7 +4,7 @@
 namespace proxy
 {
   
-  FDInfo::FDInfo() : m_state(FDState::FDState::CLOSED), m_fid(-1)
+  FDInfo::FDInfo() : state(FDState::CLOSED), fid(-1)
   {}
   
 }

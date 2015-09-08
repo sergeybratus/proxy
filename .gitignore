@@ -33,3 +33,7 @@
 /Makefile
 /cmake_install.cmake
 
+#kdev stuff
+/.kdev4
+/proxy.kdev4
+

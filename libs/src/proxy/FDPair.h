@@ -1,4 +1,5 @@
 
+#include <cstdint>
 
 namespace proxy
 {
@@ -14,12 +15,11 @@ class FDInfo
 
 public:
   
-  FDInfo() : m_state(FDState::FDState::CLOSED), m_fid(-1)
-  {}
-    
-  FDState m_state;
-  int m_fid;
+  FDInfo();
   
+    
+  FDState state;
+  int fid;  
 };
   
 /**
@@ -32,7 +32,9 @@ public:
   
   
   
-  
+  FDInfo listening;
+  FDInfo connecting;
+    
 };
   
   
