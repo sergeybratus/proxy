@@ -1,4 +1,7 @@
 
+#ifndef PROXY_FDPAIR_H
+#define PROXY_FDPAIR_H
+
 #include <cstdint>
 
 namespace proxy
@@ -16,8 +19,7 @@ class FDInfo
 public:
   
   FDInfo();
-  
-    
+      
   FDState state;
   int fid;  
 };
@@ -29,13 +31,12 @@ class FDPair
 {
   
 public:
-  
-  
-  
+      
   FDInfo listening;
-  FDInfo connecting;
-    
+  FDInfo connecting;    
 };
   
   
 }
+
+#endif

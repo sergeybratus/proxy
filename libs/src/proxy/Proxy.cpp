@@ -3,8 +3,10 @@
 namespace proxy
 {
   
-Proxy::Proxy()
-{}
+Proxy::Proxy(const std::vector<SessionConfig>& config) : epoll_fid(-1)
+{
+    
+}
 
 }
 
