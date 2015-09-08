@@ -25,8 +25,8 @@ class SessionConfig
   
 public:
   
-  EndpointConfig local;
-  EndpointConfig remote;  
+  EndpointConfig listening;
+  EndpointConfig connecting;  
 };
     
 }

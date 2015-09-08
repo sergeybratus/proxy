@@ -8,7 +8,7 @@
 #include <vector>
 #include <memory>
 
-#include "FDPair.h"
+#include "Session.h"
 #include "Config.h"
 
 namespace proxy
@@ -19,9 +19,9 @@ class Proxy
   
 public:
   
-  Proxy(const std::vector<SessionConfig>& config);   
+  Proxy(const std::vector<SessionConfig>& config);
   
-  bool Init();
+  void Run();
   
 private:
   
@@ -31,7 +31,7 @@ private:
   // epoll instance fid
   int epoll_fid;
     
-  std::vector<std::unique_ptr<FDPair>> sessions;
+  std::vector<std::unique_ptr<Session>> sessions;
   
 };
   
