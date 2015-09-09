@@ -7,6 +7,7 @@
 #include <cstdint>
 #include <vector>
 #include <memory>
+#include <system_error>
 
 #include "proxy/Session.h"
 #include "proxy/Config.h"
@@ -19,18 +20,18 @@ class Proxy : private Uncopyable
 {
   
 public:
+  
+  Proxy(const std::vector<SessionConfig>& config);
      
-  static bool Run(const std::vector<SessionConfig>& config);
+  bool Run(std::error_code& ec);    
   
 private:
   
   Proxy() = delete;
+      
+  void InitSessions(const std::vector<SessionConfig>& config);
   
-  bool Run();
-  
-  Proxy(const std::vector<SessionConfig>& config);
-  
-  void InitSessions(const std::vector<SessionConfig>& config);  
+  bool BindAndListen();
     
   std::vector<std::unique_ptr<Session>> sessions;
   

@@ -1,34 +1,38 @@
 #include "proxy/Proxy.h"
 
+#include "EPollContext.h"
+
 #include <memory>
-#include <sys/epoll.h>
 #include <cstring>
 #include <iostream>
 
 namespace proxy
 {
   
-bool Proxy::Run(const std::vector<SessionConfig>& config)
-{
-    Proxy proxy(config);
-    return proxy.Run();    
-}
-  
 Proxy::Proxy(const std::vector<SessionConfig>& config)
 {
     this->InitSessions(config);
 }
 
-bool Proxy::Run()
+bool Proxy::Run(std::error_code& ec)
 {
-  int epfd = epoll_create(3*sessions.size());
-  
-  if(epfd < 0)
-  {
-    std::cerr << "Error creating epoll fd: " << strerror(errno) << std::endl;
-    return false;
+  EPollContext epoll(3*sessions.size()+1, ec);
+   
+  if(ec)
+  {    
+    return false;;
   }
   
+  if(!this->BindAndListen())
+  {
+    return false;
+  }    
+  
+  return false;        
+}
+
+bool Proxy::BindAndListen()
+{
   for(auto& session : sessions)
   {
     session->serverfd = socket(AF_INET, SOCK_STREAM | SOCK_NONBLOCK, 0);
@@ -38,9 +42,7 @@ bool Proxy::Run()
       return false;
     }
     
-    sockaddr_in server_addr;
-    
-    std::cout << "Binding to: " << session->config.listening.address.s_addr << std::endl;
+    sockaddr_in server_addr;        
    
     bzero(&server_addr, sizeof(server_addr));
     server_addr.sin_family = AF_INET;
@@ -60,15 +62,10 @@ bool Proxy::Run()
     }
     
     std::cout << "Bound to: " << server_addr.sin_addr.s_addr << std::endl;
-  }
+  }  
   
-  do 
-  {
-    std::cout << "Press a key to continue..." << std::endl;
-  }
-  while (std::cin.get() != '\n');
+  return true; 
   
-  return false;        
 }
 
 void Proxy::InitSessions(const std::vector<SessionConfig>& config)
