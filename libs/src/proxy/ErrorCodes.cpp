@@ -1,6 +1,8 @@
 
 #include "proxy/ErrorCodes.h"
 
+#include <string>
+
 namespace proxy
 {
 
