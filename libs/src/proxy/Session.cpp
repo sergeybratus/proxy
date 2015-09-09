@@ -4,15 +4,12 @@
 namespace proxy
 {
   
-  Endpoint::Endpoint(const EndpointConfig& config_) : 
-    config(config_),
+  Connection::Connection() :     
     state(State::CLOSED),
-    fid(-1)
+    fd(-1)
   {}
   
-  Session::Session(const SessionConfig& config) :
-    listening(config.listening),
-    connecting(config.connecting)
+  Session::Session(const SessionConfig& config_) : serverfd(-1), config(config_)
   {}
   
 }

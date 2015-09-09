@@ -19,17 +19,18 @@ class Proxy : private Uncopyable
 {
   
 public:
-  
-  Proxy(const std::vector<SessionConfig>& config);
-  
-  void Run();
+     
+  static bool Run(const std::vector<SessionConfig>& config);
   
 private:
   
-  Proxy()  = delete;  
-
-  // epoll instance fid
-  int epoll_fid;
+  Proxy() = delete;
+  
+  bool Run();
+  
+  Proxy(const std::vector<SessionConfig>& config);
+  
+  void InitSessions(const std::vector<SessionConfig>& config);  
     
   std::vector<std::unique_ptr<Session>> sessions;
   

@@ -10,26 +10,21 @@
 namespace proxy
 {
     
-class Endpoint : private Uncopyable
+class Connection : private Uncopyable
 {
 
 public:
+  
+  Connection();
   
   enum class State : uint8_t
   {
     CLOSED,
     OPEN  
-  };
-  
-  Endpoint(const EndpointConfig& config);
-      
-  const EndpointConfig config;
+  };            
   
   State state;
-  int fid;
-
-private:
-  Endpoint() = delete;
+  int fd;
     
 };
    
@@ -39,11 +34,15 @@ class Session : private Uncopyable
 public:
   
   Session(const SessionConfig& config);
-      
-  Endpoint listening;
-  Endpoint connecting; 
+        
+  // fid of the server socket
+  int serverfd;
   
-private:
+  SessionConfig config;
+  
+  Connection serverconn;
+  Connection clientconn;
+    
   Session() = delete;
   
 };
