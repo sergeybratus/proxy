@@ -39,6 +39,8 @@ bool Proxy::Run()
     }
     
     sockaddr_in server_addr;
+    
+    std::cout << "Binding to: " << session->config.listening.address.s_addr << std::endl;
    
     bzero(&server_addr, sizeof(server_addr));
     server_addr.sin_family = AF_INET;
@@ -47,10 +49,24 @@ bool Proxy::Run()
     
     if(bind(session->serverfd, (struct sockaddr*)&server_addr, sizeof(server_addr)) < 0)
     {
-        std::cerr << "Error binding server fd: " << strerror(errno) << std::endl;
+        std::cerr << "bind() error server fd: " << strerror(errno) << std::endl;
         return false;
     }
+    
+    if(listen(session->serverfd, 100) < 0)
+    {
+        std::cerr << "listen() error on server fd: " << strerror(errno) << std::endl;
+        return false;
+    }
+    
+    std::cout << "Bound to: " << server_addr.sin_addr.s_addr << std::endl;
   }
+  
+  do 
+  {
+    std::cout << "Press a key to continue..." << std::endl;
+  }
+  while (std::cin.get() != '\n');
   
   return false;        
 }
