@@ -3,6 +3,7 @@
 #include "proxy/ErrorCodes.h"
 
 #include <unistd.h>
+#include <fcntl.h>
 #include <iostream>
 
 namespace proxy
@@ -84,6 +85,11 @@ namespace proxy
 
         std::cout << "Accepted connection from: " << address << std::endl;
 
+        if(!SetNonBlocking(connfd, ec))
+        {
+            return false;
+        }
+
         close(connfd);
 
         return true;
@@ -117,6 +123,25 @@ namespace proxy
         }
 
         std::cout << "Added listen for fid: " << fd << std::endl;
+
+        return true;
+    }
+
+    bool EPollContext::SetNonBlocking(int fd, std::error_code& ec)
+    {
+        const int FLAGS = fcntl(fd, F_GETFL, NULL);
+
+        if(FLAGS == -1)
+        {
+            ec = std::error_code(errno, std::system_category());
+            return false;
+        }
+
+        if(fcntl(fd, F_SETFL, FLAGS | O_NONBLOCK) == -1)
+        {
+            ec = std::error_code(errno, std::system_category());
+            return false;
+        }
 
         return true;
     }

@@ -37,6 +37,8 @@ private:
   EPollContext() = delete;
   
   bool Modify(int operation, int fd, uint32_t events, SessionContext& context, std::error_code& ec);
+
+  static bool SetNonBlocking(int fd, std::error_code& ec);
   
   const int MAX_EVENT;
   epoll_event* const events;
