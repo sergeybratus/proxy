@@ -1,20 +1,26 @@
 #include "EPollContext.h"
 
-#include <unistd.h>
+#include "proxy/ErrorCodes.h"
 
+#include <unistd.h>
 #include <iostream>
 
 namespace proxy {
 
     EPollContext::EPollContext(int numFD, int maxEvents, std::error_code &ec) :
             MAX_EVENT(maxEvents),
-            events(std::unique_ptr<epoll_event[]>(new epoll_event[maxEvents]))
+            events(new epoll_event[maxEvents]),
+            epfd(epoll_create(numFD))
     {
-        this->epfd = epoll_create(numFD);
-
-        if (epfd < 0) {
+        if (epfd < 0)
+        {
             ec = std::error_code(errno, std::system_category());
         }
+    }
+
+    EPollContext::~EPollContext()
+    {
+        delete[] events;
     }
 
     bool EPollContext::Run(std::error_code &ec)
@@ -22,7 +28,7 @@ namespace proxy {
         while (!ec)
         {
             std::cout << "epoll_wait on fd: " << epfd << std::endl;
-            int n = epoll_wait(epfd, events.get(), MAX_EVENT, -1);
+            int n = epoll_wait(epfd, events, MAX_EVENT, -1);
             std::cout << "Received events: " << n << std::endl;
 
             if (n < 0)
@@ -58,7 +64,7 @@ namespace proxy {
         // figure out what kind of event it is on the session
         if (event.events & EPOLLHUP || event.events & EPOLLERR)
         {
-            ec = std::make_error_code(std::errc::not_connected); // TODO - error code for server socket failure
+            ec = Error::SERVER_LISTEN_ERROR;
             close(session.serverfd);
             return false;
         }
@@ -93,7 +99,8 @@ namespace proxy {
         return false;
     }
 
-    bool EPollContext::AddListen(Session &session, std::error_code &ec) {
+    bool EPollContext::AddListen(Session &session, std::error_code &ec)
+    {
         return this->Modify(EPOLL_CTL_ADD, session.serverfd, EPOLLIN, session.serverListenContext, ec);
     }
 
@@ -103,7 +110,8 @@ namespace proxy {
         evt.events = events;
         evt.data.ptr = &context;
 
-        if (epoll_ctl(epfd, operation, fd, &evt) < 0) {
+        if (epoll_ctl(epfd, operation, fd, &evt) < 0)
+        {
             ec = std::error_code(errno, std::system_category());
             return false;
         }

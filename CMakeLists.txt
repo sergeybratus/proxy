@@ -1,5 +1,5 @@
 cmake_minimum_required (VERSION 3.0)
-project (opendnp3)
+project (proxy)
 set(PROXY_MAJOR_VERSION 2)
 set(PROXY_MINOR_VERSION 1)
 set(PROXY_MICRO_VERSION 0)

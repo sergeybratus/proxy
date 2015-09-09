@@ -7,9 +7,8 @@
 #include "Session.h"
 
 #include <system_error>
-#include <memory>
 #include <sys/epoll.h>
-#include <functional>
+
 
 namespace proxy
 {
@@ -20,6 +19,8 @@ class EPollContext : private Uncopyable
 public:
   
   EPollContext(int numFD, int maxEvents, std::error_code& ec);
+
+  ~EPollContext();
   
   bool Run(std::error_code& ec);
 
@@ -38,7 +39,7 @@ private:
   bool Modify(int operation, int fd, uint32_t events, SessionContext& context, std::error_code& ec);
   
   const int MAX_EVENT;
-  const std::unique_ptr<epoll_event[]> events;
+  epoll_event* const events;
     
   int epfd;
 };
