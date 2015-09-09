@@ -41,7 +41,7 @@ private:
   const int MAX_EVENT;
   epoll_event* const events;
     
-  int epfd;
+  int epoll_fd;
 };
   
 }

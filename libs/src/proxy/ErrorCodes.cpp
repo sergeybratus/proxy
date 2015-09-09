@@ -6,7 +6,8 @@ namespace proxy
 
     ProxyErrorCategory ProxyErrorCategory::instance;
 
-    std::string ProxyErrorCategory::message(int ev) const {
+    std::string ProxyErrorCategory::message(int ev) const
+    {
         switch (ev) {
             case (static_cast<int>(Error::SERVER_LISTEN_ERROR)):
                 return "A previously listening server socket has encountered an error";

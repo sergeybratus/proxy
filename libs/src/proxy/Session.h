@@ -11,43 +11,30 @@
 namespace proxy
 {
     
-class Connection : private Uncopyable
-{
-
-public:
-  
-  Connection();
-  
-  enum class State : uint8_t
-  {
-    CLOSED,
-    OPEN  
-  };            
-  
-  State state;
-  int fd;
-    
-};
-   
 class Session : private Uncopyable
 {
   
 public:
   
   Session(const SessionConfig& config);
-        
-  // fid of the server socket
-  int serverfd;
-  
-  SessionConfig config;
-  
-  Connection serverconn;
-  Connection clientconn;
 
-  SessionContext serverListenContext;
-  SessionContext serverConnContext;
-  SessionContext clientConnContext;
+  // static configuration information
+  const SessionConfig config;
 
+  // fd of the server socket
+  int server_listen_fd;
+
+  // fd of the server connection socket
+  int server_conn_fd;
+
+  // fd of the client connection socket
+  int client_conn_fd;
+
+  // the contexts point back to the session and provide
+  // an enum describing a FD event source
+  SessionContext server_listen_ctx;
+  SessionContext server_conn_ctx;
+  SessionContext client_conn_ctx;
     
   Session() = delete;
   

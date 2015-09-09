@@ -5,14 +5,15 @@
 #include <unistd.h>
 #include <iostream>
 
-namespace proxy {
+namespace proxy
+{
 
     EPollContext::EPollContext(int numFD, int maxEvents, std::error_code &ec) :
             MAX_EVENT(maxEvents),
             events(new epoll_event[maxEvents]),
-            epfd(epoll_create(numFD))
+            epoll_fd(epoll_create(numFD))
     {
-        if (epfd < 0)
+        if (epoll_fd < 0)
         {
             ec = std::error_code(errno, std::system_category());
         }
@@ -27,9 +28,7 @@ namespace proxy {
     {
         while (!ec)
         {
-            std::cout << "epoll_wait on fd: " << epfd << std::endl;
-            int n = epoll_wait(epfd, events, MAX_EVENT, -1);
-            std::cout << "Received events: " << n << std::endl;
+            int n = epoll_wait(epoll_fd, events, MAX_EVENT, -1);
 
             if (n < 0)
             {
@@ -66,14 +65,14 @@ namespace proxy {
         if (event.events & EPOLLHUP || event.events & EPOLLERR)
         {
             ec = Error::SERVER_LISTEN_ERROR;
-            close(session.serverfd);
+            close(session.server_listen_fd);
             return false;
         }
 
         sockaddr_in clientaddr;
         socklen_t clientlen = sizeof(clientaddr);
 
-        int connfd = accept(session.serverfd, (sockaddr *) &clientaddr, &clientlen);
+        int connfd = accept(session.server_listen_fd, (sockaddr *) &clientaddr, &clientlen);
 
         if (connfd < 1) {
             ec = std::error_code(errno, std::system_category());
@@ -102,7 +101,7 @@ namespace proxy {
 
     bool EPollContext::AddListen(Session &session, std::error_code &ec)
     {
-        return this->Modify(EPOLL_CTL_ADD, session.serverfd, EPOLLIN, session.serverListenContext, ec);
+        return this->Modify(EPOLL_CTL_ADD, session.server_listen_fd, EPOLLIN, session.server_listen_ctx, ec);
     }
 
     bool EPollContext::Modify(int operation, int fd, uint32_t events, SessionContext& context, std::error_code &ec)
@@ -111,7 +110,7 @@ namespace proxy {
         evt.events = events;
         evt.data.ptr = &context;
 
-        if (epoll_ctl(epfd, operation, fd, &evt) < 0)
+        if (epoll_ctl(epoll_fd, operation, fd, &evt) < 0)
         {
             ec = std::error_code(errno, std::system_category());
             return false;
