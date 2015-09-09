@@ -19,7 +19,7 @@ class EPollContext : private Uncopyable
   
 public:
   
-  EPollContext(size_t numFD, int maxEvents, std::error_code& ec);   
+  EPollContext(int numFD, int maxEvents, std::error_code& ec);
   
   bool Run(std::error_code& ec);
 
@@ -28,10 +28,14 @@ public:
 private:
   
   bool ProcessEvent(epoll_event& event, std::error_code& ec);
+
+  bool ProcessServerListenEvent(const epoll_event& event, Session& session, std::error_code& ec);
+  bool ProcessServerConnEvent(const epoll_event& event, Session& session, std::error_code& ec);
+  bool ProcessClientConnEvent(const epoll_event& event, Session& session, std::error_code& ec);
   
   EPollContext() = delete;
   
-  bool Modify(int operation, int fd, uint32_t events, Session& session, std::error_code& ec);
+  bool Modify(int operation, int fd, uint32_t events, SessionContext& context, std::error_code& ec);
   
   const int MAX_EVENT;
   const std::unique_ptr<epoll_event[]> events;

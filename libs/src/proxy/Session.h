@@ -6,6 +6,7 @@
 
 #include "proxy/Config.h"
 #include "proxy/Uncopyable.h"
+#include "proxy/SessionContext.h"
 
 namespace proxy
 {
@@ -42,6 +43,11 @@ public:
   
   Connection serverconn;
   Connection clientconn;
+
+  SessionContext serverListenContext;
+  SessionContext serverConnContext;
+  SessionContext clientConnContext;
+
     
   Session() = delete;
   
