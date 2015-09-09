@@ -16,19 +16,24 @@ Proxy::Proxy(const std::vector<SessionConfig>& config)
 
 bool Proxy::Run(std::error_code& ec)
 {
-  EPollContext epoll(3*sessions.size()+1, ec);
+  EPollContext epoll(3*sessions.size()+1, 50, ec); // TODO - 50 is arbitrary
    
   if(ec)
   {    
-    return false;;
+    return false;
   }
   
   if(!this->BindAndListen())
   {
     return false;
-  }    
+  }   
   
-  return false;        
+  for(auto& session : sessions)
+  {
+    epoll.AddListen(*session, ec);
+  }
+  
+  return epoll.Run(ec);    
 }
 
 bool Proxy::BindAndListen()

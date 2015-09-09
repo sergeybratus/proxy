@@ -1,6 +1,9 @@
 # linux temporary files
 *~
 
+#clion
+/.idea
+
 # Compiled Object files
 *.slo
 *.lo
