@@ -8,7 +8,8 @@ namespace proxy
 {
     enum class Error
     {
-       SERVER_LISTEN_ERROR, // occurs when a previously listening server socket fails
+       SERVER_LISTEN_ERROR,     // A previously listening server socket has encountered an error
+       UNKNOWN_SESSION_EVENT,   // An unknown event occurred on a proxy session
     };
 
     class ProxyErrorCategory final : public std::error_category

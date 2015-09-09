@@ -10,6 +10,8 @@ namespace proxy
         switch (ev) {
             case (static_cast<int>(Error::SERVER_LISTEN_ERROR)):
                 return "A previously listening server socket has encountered an error";
+            case (static_cast<int>(Error::UNKNOWN_SESSION_EVENT)):
+                return "An unknown event occurred on a proxy session";
             default:
                 return "Unknown error";
         }

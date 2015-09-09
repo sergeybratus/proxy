@@ -55,6 +55,7 @@ namespace proxy {
             case(SessionContext::Type::SERVER_FD):
                 return this->ProcessServerListenEvent(event, *context->session, ec);
             default:
+                ec = Error::UNKNOWN_SESSION_EVENT;
                 return false;
         }
     }
