@@ -39,6 +39,7 @@
 /Makefile
 /cmake_install.cmake
 /build
+/proxyd
 
 #kdev stuff
 /.kdev4
