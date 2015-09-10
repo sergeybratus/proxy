@@ -16,10 +16,18 @@ ServerEventHandler::ServerEventHandler(Session& session_) :
 
 bool ServerEventHandler::Process(uint32_t events, IEPollContext& context, std::error_code& ec)
 {
-    // figure out what kind of event it is on the session
+    // These events are always raised even if you didn't register for them
     if (events & EPOLLHUP || events & EPOLLERR)
     {
         ec = Error::SERVER_LISTEN_ERROR;
+        close(session->server_listen_fd);
+        return false;
+    }
+
+    // This is the only other event we should see here
+    if(!(events & EPOLLIN))
+    {
+        ec = Error::UNKNOWN_SESSION_EVENT;
         close(session->server_listen_fd);
         return false;
     }
