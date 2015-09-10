@@ -2,7 +2,6 @@
 
 #include "EPollContext.h"
 
-#include <memory>
 #include <cstring>
 #include <iostream>
 
@@ -28,9 +27,9 @@ bool Proxy::Run(std::error_code& ec)
     return false;
   }   
   
-  for(auto& session : sessions)
+  for(auto& info : sessions)
   {
-    epoll.AddListen(*session, ec);
+    epoll.Modify(EPOLL_CTL_ADD, info->session.server_listen_fd, EPOLLIN, info->serverEventHandler, ec);
   }
   
   return epoll.Run(ec);    
@@ -38,10 +37,10 @@ bool Proxy::Run(std::error_code& ec)
 
 bool Proxy::BindAndListen()
 {
-  for(auto& session : sessions)
+  for(auto& info : sessions)
   {
-    session->server_listen_fd = socket(AF_INET, SOCK_STREAM | SOCK_NONBLOCK, 0);
-    if(session->server_listen_fd < 0)
+    info->session.server_listen_fd = socket(AF_INET, SOCK_STREAM | SOCK_NONBLOCK, 0);
+    if(info->session.server_listen_fd < 0)
     {
       std::cerr << "Error server fd: " << strerror(errno) << std::endl;
       return false;
@@ -51,22 +50,25 @@ bool Proxy::BindAndListen()
    
     bzero(&server_addr, sizeof(server_addr));
     server_addr.sin_family = AF_INET;
-    server_addr.sin_port = htons(session->config.server.port);
-    server_addr.sin_addr.s_addr = htonl(session->config.server.address.s_addr);
+    server_addr.sin_port = htons(info->session.config.server.port);
+    server_addr.sin_addr.s_addr = htonl(info->session.config.server.address.s_addr);
     
-    if(bind(session->server_listen_fd, (struct sockaddr*)&server_addr, sizeof(server_addr)) < 0)
+    if(bind(info->session.server_listen_fd, (struct sockaddr*)&server_addr, sizeof(server_addr)) < 0)
     {
         std::cerr << "bind() error server fd: " << strerror(errno) << std::endl;
         return false;
     }
     
-    if(listen(session->server_listen_fd, 100) < 0)
+    if(listen(info->session.server_listen_fd, 100) < 0)
     {
         std::cerr << "listen() error on server fd: " << strerror(errno) << std::endl;
         return false;
     }
-    
-    std::cout << "Bound to: " << server_addr.sin_addr.s_addr << std::endl;
+
+    char buffer[INET_ADDRSTRLEN];
+    auto address = inet_ntop(AF_INET, &server_addr.sin_addr, buffer, INET_ADDRSTRLEN);
+    std::cout << "Bound to: " << address << std::endl;
+
   }  
   
   return true; 
@@ -77,7 +79,7 @@ void Proxy::InitSessions(const std::vector<SessionConfig>& config)
 {
   for(auto& item : config)
   {
-    this->sessions.push_back(std::unique_ptr<Session>(new Session(item)));    
+    this->sessions.push_back(std::unique_ptr<SessionInfo>(new SessionInfo(item)));
   }
 }
 

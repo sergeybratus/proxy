@@ -1,11 +1,5 @@
 #include "EPollContext.h"
 
-#include "proxy/ErrorCodes.h"
-
-#include <unistd.h>
-#include <fcntl.h>
-#include <iostream>
-
 namespace proxy
 {
 
@@ -48,73 +42,15 @@ namespace proxy
 
     bool EPollContext::ProcessEvent(epoll_event &event, std::error_code &ec)
     {
-        SessionContext* context = reinterpret_cast<SessionContext*>(event.data.ptr);
-
-        switch(context->type)
-        {
-            case(SessionContext::Type::SERVER_FD):
-                return this->ProcessServerListenEvent(event, *context->session, ec);
-            default:
-                ec = Error::UNKNOWN_SESSION_EVENT;
-                return false;
-        }
+        auto handler = reinterpret_cast<IEventHandler*>(event.data.ptr);
+        return handler->Process(event.events, *this, ec);
     }
 
-    bool EPollContext::ProcessServerListenEvent(const epoll_event& event, Session& session, std::error_code& ec)
-    {
-        // figure out what kind of event it is on the session
-        if (event.events & EPOLLHUP || event.events & EPOLLERR)
-        {
-            ec = Error::SERVER_LISTEN_ERROR;
-            close(session.server_listen_fd);
-            return false;
-        }
-
-        sockaddr_in clientaddr;
-        socklen_t clientlen = sizeof(clientaddr);
-
-        int connfd = accept(session.server_listen_fd, (sockaddr *) &clientaddr, &clientlen);
-
-        if (connfd < 1) {
-            ec = std::error_code(errno, std::system_category());
-            return false;
-        }
-
-        char buffer[INET_ADDRSTRLEN];
-        auto address = inet_ntop(AF_INET, &clientaddr.sin_addr, buffer, INET_ADDRSTRLEN);
-
-        std::cout << "Accepted connection from: " << address << std::endl;
-
-        if(!SetNonBlocking(connfd, ec))
-        {
-            return false;
-        }
-
-        close(connfd);
-
-        return true;
-    }
-
-    bool EPollContext::ProcessServerConnEvent(const epoll_event& event, Session& session, std::error_code& ec)
-    {
-        return false;
-    }
-
-    bool EPollContext::ProcessClientConnEvent(const epoll_event& event, Session& session, std::error_code& ec)
-    {
-        return false;
-    }
-
-    bool EPollContext::AddListen(Session &session, std::error_code &ec)
-    {
-        return this->Modify(EPOLL_CTL_ADD, session.server_listen_fd, EPOLLIN, session.server_listen_ctx, ec);
-    }
-
-    bool EPollContext::Modify(int operation, int fd, uint32_t events, SessionContext& context, std::error_code &ec)
+    bool EPollContext::Modify(int operation, int fd, uint32_t events, IEventHandler& handler, std::error_code &ec)
     {
         epoll_event evt;
         evt.events = events;
-        evt.data.ptr = &context;
+        evt.data.ptr = &handler;
 
         if (epoll_ctl(epoll_fd, operation, fd, &evt) < 0)
         {
@@ -122,29 +58,9 @@ namespace proxy
             return false;
         }
 
-        std::cout << "Added listen for fid: " << fd << std::endl;
-
         return true;
     }
 
-    bool EPollContext::SetNonBlocking(int fd, std::error_code& ec)
-    {
-        const int FLAGS = fcntl(fd, F_GETFL, NULL);
-
-        if(FLAGS == -1)
-        {
-            ec = std::error_code(errno, std::system_category());
-            return false;
-        }
-
-        if(fcntl(fd, F_SETFL, FLAGS | O_NONBLOCK) == -1)
-        {
-            ec = std::error_code(errno, std::system_category());
-            return false;
-        }
-
-        return true;
-    }
 
 }
 

@@ -6,7 +6,6 @@
 
 #include "proxy/Config.h"
 #include "proxy/Uncopyable.h"
-#include "proxy/SessionContext.h"
 
 namespace proxy
 {
@@ -30,11 +29,7 @@ public:
   // fd of the client connection socket
   int client_conn_fd;
 
-  // the contexts point back to the session and provide
-  // an enum describing a FD event source
-  SessionContext server_listen_ctx;
-  SessionContext server_conn_ctx;
-  SessionContext client_conn_ctx;
+private:
     
   Session() = delete;
   

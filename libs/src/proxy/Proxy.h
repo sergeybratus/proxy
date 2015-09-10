@@ -9,7 +9,7 @@
 #include <memory>
 #include <system_error>
 
-#include "proxy/Session.h"
+#include "proxy/SessionInfo.h"
 #include "proxy/Config.h"
 #include "proxy/Uncopyable.h"
 
@@ -33,7 +33,7 @@ private:
   
   bool BindAndListen();
     
-  std::vector<std::unique_ptr<Session>> sessions;
+  std::vector<std::unique_ptr<SessionInfo>> sessions;
   
 };
   
