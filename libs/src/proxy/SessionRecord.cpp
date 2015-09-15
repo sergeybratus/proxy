@@ -1,5 +1,5 @@
 
-#include "SessionInfo.h"
+#include "SessionRecord.h"
 
 #include <string.h>
 #include <iostream>
@@ -8,12 +8,12 @@
 namespace proxy
 {
 
-  SessionInfo::SessionInfo(const SessionConfig& config) :
+  SessionRecord::SessionRecord(const SessionConfig& config) :
     session(config),
     serverListenerEventHandler(session)
   {}
 
-  bool SessionInfo::Intialize(IEPollContext& epoll, std::error_code& ec)
+  bool SessionRecord::Intialize(IEPollContext& epoll, std::error_code& ec)
   {
     if(!BindAndListen(ec))
     {
@@ -24,7 +24,7 @@ namespace proxy
     return epoll.Modify(EPOLL_CTL_ADD, session.server_listen_fd, EPOLLIN, serverListenerEventHandler, ec);
   }
 
-  bool SessionInfo::BindAndListen(std::error_code& ec)
+  bool SessionRecord::BindAndListen(std::error_code& ec)
   {
       session.server_listen_fd = socket(AF_INET, SOCK_STREAM | SOCK_NONBLOCK, 0);
       if(session.server_listen_fd < 0)

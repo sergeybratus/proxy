@@ -1,6 +1,6 @@
 
-#ifndef PROXY_SESSION_INFO_H
-#define PROXY_SESSION_INFO_H
+#ifndef PROXY_SESSION_RECORD_H
+#define PROXY_SESSION_RECORD_H
 
 #include "proxy/Session.h"
 #include "proxy/ServerEventHandler.h"
@@ -10,12 +10,12 @@
 namespace proxy
 {
     
-class SessionInfo : private Uncopyable
+class SessionRecord : private Uncopyable
 {
   
 public:
   
-  SessionInfo(const SessionConfig& config);
+  SessionRecord(const SessionConfig& config);
 
   bool Intialize(IEPollContext& epoll, std::error_code& ec);
 
@@ -26,7 +26,7 @@ private:
   Session session;
   ServerEventHandler serverListenerEventHandler;
 
-  SessionInfo() = delete;
+  SessionRecord() = delete;
   
 };
   

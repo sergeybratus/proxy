@@ -9,7 +9,7 @@
 #include <memory>
 #include <system_error>
 
-#include "proxy/SessionInfo.h"
+#include "SessionRecord.h"
 #include "proxy/Config.h"
 #include "proxy/Uncopyable.h"
 
@@ -29,7 +29,7 @@ private:
   
   Proxy() = delete;
     
-  std::vector<std::unique_ptr<SessionInfo>> sessions;
+  std::vector<std::unique_ptr<SessionRecord>> sessions;
   
 };
   

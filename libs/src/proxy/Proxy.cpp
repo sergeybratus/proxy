@@ -12,7 +12,7 @@ Proxy::Proxy(const std::vector<SessionConfig>& config)
 {
   for(auto& item : config)
   {
-    this->sessions.push_back(std::unique_ptr<SessionInfo>(new SessionInfo(item)));
+    this->sessions.push_back(std::unique_ptr<SessionRecord>(new SessionRecord(item)));
   }
 }
 
