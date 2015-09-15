@@ -10,10 +10,10 @@ namespace proxy
 
   SessionRecord::SessionRecord(const SessionConfig& config) :
     session(config),
-    serverListenerEventHandler(session)
+    handlers(session)
   {}
 
-  bool SessionRecord::Intialize(IEPollContext& epoll, std::error_code& ec)
+  bool SessionRecord::Initialize(IEPollContext& epoll, std::error_code& ec)
   {
     if(!BindAndListen(ec))
     {
@@ -21,7 +21,7 @@ namespace proxy
     }
 
     // register to be notified when there are incoming connection requests
-    return epoll.Modify(EPOLL_CTL_ADD, session.server_listen_fd, EPOLLIN, serverListenerEventHandler, ec);
+    return epoll.Modify(EPOLL_CTL_ADD, session.server_listen_fd, EPOLLIN, handlers.serverListenerEventHandler, ec);
   }
 
   bool SessionRecord::BindAndListen(std::error_code& ec)
@@ -40,13 +40,13 @@ namespace proxy
       server_addr.sin_port = htons(session.config.server.port);
       server_addr.sin_addr.s_addr = htonl(session.config.server.address.s_addr);
 
-      if(bind(session.server_listen_fd, (struct sockaddr*)&server_addr, sizeof(server_addr)) < 0)
+      if(bind(session.server_listen_fd, (struct sockaddr*)&server_addr, sizeof(server_addr)))
       {
           ec = std::error_code(errno, std::system_category());
           return false;
       }
 
-      if(listen(session.server_listen_fd, 100) < 0)
+      if(listen(session.server_listen_fd, 100))
       {
           ec = std::error_code(errno, std::system_category());
           return false;

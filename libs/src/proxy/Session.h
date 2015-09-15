@@ -17,6 +17,10 @@ public:
   
   Session(const SessionConfig& config);
 
+
+  /// close the two connection fds
+  void Reset();
+
   // static configuration information
   const SessionConfig config;
 

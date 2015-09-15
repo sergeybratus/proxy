@@ -28,7 +28,7 @@ bool Proxy::Run(std::error_code& ec)
 
   for(auto& info : sessions)
   {
-    if(!info->Intialize(epoll, ec))
+    if(!info->Initialize(epoll, ec))
     {
       return false;
     }

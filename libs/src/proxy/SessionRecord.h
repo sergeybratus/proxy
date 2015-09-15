@@ -3,7 +3,7 @@
 #define PROXY_SESSION_RECORD_H
 
 #include "proxy/Session.h"
-#include "proxy/ServerEventHandler.h"
+#include "EventHandlers.h"
 
 #include <system_error>
 
@@ -17,14 +17,14 @@ public:
   
   SessionRecord(const SessionConfig& config);
 
-  bool Intialize(IEPollContext& epoll, std::error_code& ec);
+  bool Initialize(IEPollContext& epoll, std::error_code& ec);
 
 private:
 
   bool BindAndListen(std::error_code& ec);
 
   Session session;
-  ServerEventHandler serverListenerEventHandler;
+  EventHandlers handlers;
 
   SessionRecord() = delete;
   
