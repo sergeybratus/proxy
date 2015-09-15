@@ -28,10 +28,6 @@ public:
 private:
   
   Proxy() = delete;
-      
-  void InitSessions(const std::vector<SessionConfig>& config);
-  
-  bool BindAndListen();
     
   std::vector<std::unique_ptr<SessionInfo>> sessions;
   

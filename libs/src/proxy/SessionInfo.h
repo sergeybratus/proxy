@@ -5,6 +5,8 @@
 #include "proxy/Session.h"
 #include "proxy/ServerEventHandler.h"
 
+#include <system_error>
+
 namespace proxy
 {
     
@@ -13,16 +15,16 @@ class SessionInfo : private Uncopyable
   
 public:
   
-  SessionInfo(const SessionConfig& config) :
-    session(config),
-    serverEventHandler(session)
-  {}
+  SessionInfo(const SessionConfig& config);
 
-  Session session;
-
-  ServerEventHandler serverEventHandler;
+  bool Intialize(IEPollContext& epoll, std::error_code& ec);
 
 private:
+
+  bool BindAndListen(std::error_code& ec);
+
+  Session session;
+  ServerEventHandler serverListenerEventHandler;
 
   SessionInfo() = delete;
   
