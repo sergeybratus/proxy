@@ -10,6 +10,7 @@ namespace proxy
     {
        SERVER_LISTEN_ERROR,     // A previously listening server socket has encountered an error
        UNKNOWN_SESSION_EVENT,   // An unknown event occurred on a proxy session
+       INVALID_IPV4_ADDRESS     // Invalid IPv4 address
     };
 
     class ProxyErrorCategory final : public std::error_category

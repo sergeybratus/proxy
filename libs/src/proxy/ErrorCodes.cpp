@@ -15,6 +15,8 @@ namespace proxy
                 return "A previously listening server socket has encountered an error";
             case (static_cast<int>(Error::UNKNOWN_SESSION_EVENT)):
                 return "An unknown event occurred on a proxy session";
+            case (static_cast<int>(Error::INVALID_IPV4_ADDRESS)):
+                return "Invalid IPv4 address";
             default:
                 return "Unknown error";
         }

@@ -15,13 +15,13 @@ namespace proxy
 
   void Session::Reset()
   {
-        if(this->server_conn_fd > 0)
+        if(this->server_conn_fd >= 0)
         {
             close(this->server_conn_fd);
             this->server_conn_fd = -1;
         }
 
-        if(this->client_conn_fd > 0)
+        if(this->client_conn_fd >= 0)
         {
             close(this->client_conn_fd);
             this->client_conn_fd = -1;

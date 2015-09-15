@@ -3,7 +3,10 @@
 #define PROXY_CONFIG_H
 
 #include <arpa/inet.h>
+
 #include <cstdint>
+#include <cstring>
+#include <system_error>
 
 namespace proxy
 {
@@ -14,7 +17,8 @@ class EndpointConfig
 public:
   
   EndpointConfig();
-  EndpointConfig(in_addr address, uint16_t port);
+
+  bool SetAddress(const std::string& address, std::error_code& ec);
      
   in_addr address;
   uint16_t port;

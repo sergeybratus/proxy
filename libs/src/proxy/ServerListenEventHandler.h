@@ -23,6 +23,8 @@ public:
 
 private:
 
+  bool BeginClientConnection(IEPollContext& context, std::error_code& ec);
+
   ServerListenEventHandler() = delete;
     
   Session* const session;
