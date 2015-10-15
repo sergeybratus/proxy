@@ -20,6 +20,9 @@ namespace proxy  {
 
         TCLAP::ValueArg<uint16_t> listenPort;
         TCLAP::ValueArg<std::string> listenAdapter;
+
+        TCLAP::ValueArg<uint16_t> connectPort;
+        TCLAP::ValueArg<std::string> connectHost;
     };
 
 }

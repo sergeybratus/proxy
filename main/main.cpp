@@ -1,6 +1,8 @@
 
 #include <proxy/ProxyAPI.h>
 
+#include "CommandLineOptions.h"
+
 #include <iostream>
 
 using namespace proxy;
@@ -8,10 +10,13 @@ using namespace proxy;
 
 int main (int argc, char *argv[])
 {
-    std::error_code ec;
+    CommandLineOptions options;
 
-	ProxyConfig config;
-	config.client.port = 8080;
+    options.Parse(argc, argv);
+
+    ProxyConfig config;
+
+    std::error_code ec;
 
     if(!config.client.SetAddress("127.0.0.1", ec))
     {
