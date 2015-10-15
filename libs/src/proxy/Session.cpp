@@ -6,7 +6,7 @@
 namespace proxy
 {
 
-  Session::Session(const SessionConfig& config_) :
+  Session::Session(const Config& config_) :
           config(config_),
           server_listen_fd(-1),
           server_conn_fd(-1),

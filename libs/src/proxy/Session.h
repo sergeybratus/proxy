@@ -15,14 +15,14 @@ class Session : private Uncopyable
   
 public:
   
-  Session(const SessionConfig& config);
+  Session(const Config& config);
 
 
   /// close the two connection fds
   void Reset();
 
   // static configuration information
-  const SessionConfig config;
+  const Config config;
 
   // fd of the server socket
   int server_listen_fd;

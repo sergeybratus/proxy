@@ -8,7 +8,7 @@
 namespace proxy
 {
 
-  SessionRecord::SessionRecord(const SessionConfig& config) :
+  SessionRecord::SessionRecord(const Config& config) :
     session(config),
     handlers(session)
   {}

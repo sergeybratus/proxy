@@ -23,6 +23,7 @@ set(CMAKE_CXX_FLAGS_DEBUG "-O0 -g")
 # include paths for all the local libraries
 include_directories(./libs/src)
 include_directories(./libs/include)
+include_directories(./deps/tclap/include)
 
 # ---- proxy library ----
 file(GLOB_RECURSE proxy_SRC ./libs/src/proxy/*.cpp)

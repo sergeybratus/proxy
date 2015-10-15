@@ -10,7 +10,7 @@
 namespace proxy
 {
   
-bool Run(const std::vector<SessionConfig>& config, std::error_code& ec);
+bool Run(const Config& config, std::error_code& ec);
     
 }
 

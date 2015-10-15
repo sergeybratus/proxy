@@ -15,7 +15,7 @@ class SessionRecord : private Uncopyable
   
 public:
   
-  SessionRecord(const SessionConfig& config);
+  SessionRecord(const Config& config);
 
   bool Initialize(IEPollContext& epoll, std::error_code& ec);
 

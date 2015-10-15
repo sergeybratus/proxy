@@ -24,7 +24,7 @@ public:
   uint16_t port;
 };
   
-class SessionConfig
+class Config
 {    
   
 public:
