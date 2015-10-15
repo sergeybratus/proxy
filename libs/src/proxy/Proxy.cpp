@@ -1,15 +1,9 @@
 #include "proxy/Proxy.h"
 
-#include "EPollContext.h"
-
-#include <cstring>
-#include <iostream>
-#include <unistd.h>
-
 namespace proxy
 {
   
-Proxy::Proxy(const Config& config_) : config(config_)
+Proxy::Proxy(const ProxyConfig& config_) : config(config_)
 {
 
 }

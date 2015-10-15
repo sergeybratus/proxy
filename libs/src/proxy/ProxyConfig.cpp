@@ -1,4 +1,4 @@
-#include "proxy/Config.h"
+#include "proxy/ProxyConfig.h"
 
 #include "proxy/ErrorCodes.h"
 

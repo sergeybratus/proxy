@@ -10,7 +10,7 @@ int main (int argc, char *argv[])
 {
     std::error_code ec;
 
-	Config config;
+	ProxyConfig config;
 	config.client.port = 8080;
 
     if(!config.client.SetAddress("127.0.0.1", ec))

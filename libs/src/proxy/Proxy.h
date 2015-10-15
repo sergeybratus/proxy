@@ -4,7 +4,7 @@
 
 #include <system_error>
 
-#include "proxy/Config.h"
+#include "proxy/ProxyConfig.h"
 #include "proxy/Uncopyable.h"
 #include "proxy/FileDesc.h"
 
@@ -16,7 +16,7 @@ class Proxy : private Uncopyable
   
 public:
   
-  Proxy(const Config& config);
+  Proxy(const ProxyConfig& config);
      
   bool Run(std::error_code& ec);    
   
@@ -30,7 +30,7 @@ private:
   
   Proxy() = delete;
 
-  const Config config;
+  const ProxyConfig config;
 
 };
   

@@ -6,7 +6,7 @@
 namespace proxy
 {
   
-bool Run(const Config& config, std::error_code& ec)
+bool Run(const ProxyConfig& config, std::error_code& ec)
 {
     Proxy proxy(config);
     return proxy.Run(ec);
