@@ -10,7 +10,7 @@ Proxy::Proxy(const ProxyConfig& config_) : config(config_)
 
 bool Proxy::Run(std::error_code& ec)
 {
-  auto listen_fd = BindAndListen(ec);
+  FileDesc listen_fd(BindAndListen(ec));
 
   if(ec)
   {
@@ -19,7 +19,7 @@ bool Proxy::Run(std::error_code& ec)
 
   while(!ec)
   {
-      auto server_fd = AcceptConnection(listen_fd, ec);
+      FileDesc server_fd(AcceptConnection(listen_fd, ec));
 
       // connection should be automatically closed, but here is where we'll fork
   }

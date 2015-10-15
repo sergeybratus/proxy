@@ -31,6 +31,7 @@ add_library(proxy ${LIB_TYPE} ${proxy_SRC})
 install(TARGETS proxy DESTINATION lib)
 
 # ---- proxyd ----
-add_executable(proxyd ./main/main.cpp)
+file(GLOB_RECURSE proxyd_SRC ./main/*.cpp)
+add_executable(proxyd ${proxyd_SRC})
 target_link_libraries(proxyd LINK_PUBLIC proxy)
 
