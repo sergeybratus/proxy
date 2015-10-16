@@ -8,9 +8,10 @@ namespace proxy
 {
     enum class Error
     {
-       SERVER_LISTEN_ERROR,     // A previously listening server socket has encountered an error
-       UNKNOWN_SESSION_EVENT,   // An unknown event occurred on a proxy session
-       INVALID_IPV4_ADDRESS     // Invalid IPv4 address
+       SERVER_LISTEN_ERROR,      // A previously listening server socket has encountered an error
+       EPOLL_SOCKET_ERR,         // epoll returned an error for an open socket
+       INVALID_IPV4_ADDRESS,     // Invalid IPv4 address
+       END_OF_FILE               // read() returned 0
     };
 
     class ProxyErrorCategory final : public std::error_category
