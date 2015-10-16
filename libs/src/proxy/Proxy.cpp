@@ -182,6 +182,8 @@ FileDesc Proxy::Connect(std::error_code& ec)
         return FileDesc();
     }
 
+    LOG(INFO) << "Connected to " << address << ":" << config.client.port;
+
     return client_fd;
 }
 
@@ -236,7 +238,7 @@ FileDesc Proxy::BindAndListen(std::error_code& ec)
 
   char buffer[INET_ADDRSTRLEN];
   auto address = inet_ntop(AF_INET, &server_addr.sin_addr, buffer, INET_ADDRSTRLEN);
-  LOG(INFO) << "Listening on: " << address;
+  LOG(INFO) << "Listening on: " << address << ":" << config.server.port;
 
   return server_listen_fd;
 }
