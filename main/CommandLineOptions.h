@@ -3,6 +3,8 @@
 
 #include <tclap/CmdLine.h>
 
+#include <proxy/ProxyConfig.h>
+
 namespace proxy  {
 
     class CommandLineOptions
@@ -13,10 +15,10 @@ namespace proxy  {
 
         void Parse(int argc, char** argv);
 
+        bool Get(ProxyConfig& config, std::error_code& ec);
+
     private:
         TCLAP::CmdLine cmd;
-
-    public:
 
         TCLAP::ValueArg<uint16_t> listenPort;
         TCLAP::ValueArg<std::string> listenAdapter;

@@ -21,4 +21,26 @@ namespace proxy
     {
         cmd.parse(argc, argv);
     }
+
+    bool CommandLineOptions::Get(ProxyConfig& config, std::error_code& ec)
+    {
+        config.client.port = connectPort.getValue();
+        config.server.port = listenPort.getValue();
+
+        config.client.SetAddress(connectHost.getValue(), ec);
+
+        if(ec)
+        {
+            return false;
+        }
+
+        config.server.SetAddress(listenAdapter.getValue(), ec);
+
+        if(ec)
+        {
+            return false;
+        }
+
+        return true;
+    }
 }

@@ -1,3 +1,4 @@
+#include <iostream>
 #include "proxy/Proxy.h"
 
 namespace proxy
@@ -5,7 +6,7 @@ namespace proxy
   
 Proxy::Proxy(const ProxyConfig& config_) : config(config_)
 {
-
+    
 }
 
 bool Proxy::Run(std::error_code& ec)
@@ -40,7 +41,16 @@ FileDesc Proxy::AcceptConnection(const FileDesc& listen_fd, std::error_code& ec)
 
     FileDesc conn_fd(accept(listen_fd, (sockaddr *) &clientaddr, &clientlen));
 
-    if (!conn_fd.IsValid())
+    if (conn_fd.IsValid())
+    {
+        std::cout << "accepted connection" << std::endl;
+
+          /* TODO logging
+          char buffer[INET_ADDRSTRLEN];
+          auto address = inet_ntop(AF_INET, &server_addr.sin_addr, buffer, INET_ADDRSTRLEN);
+          */
+    }
+    else
     {
         ec = std::error_code(errno, std::system_category());
     }

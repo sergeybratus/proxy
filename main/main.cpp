@@ -3,22 +3,17 @@
 
 #include "CommandLineOptions.h"
 
-#include <iostream>
-
 using namespace proxy;
 
 
 int main (int argc, char *argv[])
 {
     CommandLineOptions options;
-
     options.Parse(argc, argv);
 
     ProxyConfig config;
-
     std::error_code ec;
-
-    if(!config.client.SetAddress("127.0.0.1", ec))
+    if(!options.Get(config, ec))
     {
         std::cerr << "Config error: " << ec.message() << std::endl;
         return -1;
