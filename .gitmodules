@@ -1,3 +1,6 @@
 [submodule "deps/tclap"]
 	path = deps/tclap
 	url = https://github.com/xguerin/tclap.git
+[submodule "deps/easylogging"]
+	path = deps/easylogging
+	url = https://github.com/easylogging/easyloggingpp.git
