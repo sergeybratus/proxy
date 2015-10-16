@@ -8,7 +8,8 @@ namespace proxy
             cmd("dnp3proxy", ' ', "0.1"),
             listenPort("l", "listenPort", "Port the server listens on", false, 20000, "tcp port"),
             listenAdapter("a", "listenAdapter", "Adapter on which the server listens for connection", false, "127.0.0.1", "ipv4 address"),
-            connectPort("c", "connPort", "Port on which to connect to the downstream server", false, 20000, "tcp port"),
+            // we make this 20001, just so the default configuration doesn't connect to itself
+            connectPort("c", "connPort", "Port on which to connect to the downstream server", false, 20001, "tcp port"),
             connectHost("n", "connAdapter", "IP address of the downstream host", false, "127.0.0.1", "ipv4 address")
     {
         cmd.add(listenPort);

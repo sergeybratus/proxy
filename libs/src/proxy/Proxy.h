@@ -26,7 +26,9 @@ private:
 
   FileDesc AcceptConnection(const FileDesc& listen_fd, std::error_code& ec);
 
-  bool ForkSession(FileDesc& server_fd, std::error_code& ec);
+  FileDesc Connect(std::error_code& ec);
+
+  void ProcessConnection(FileDesc& server_fd);
   
   Proxy() = delete;
 
