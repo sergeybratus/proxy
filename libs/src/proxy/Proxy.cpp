@@ -1,12 +1,13 @@
-#include <iostream>
 #include "proxy/Proxy.h"
+
+#include "easylogging++.h"
 
 namespace proxy
 {
   
 Proxy::Proxy(const ProxyConfig& config_) : config(config_)
 {
-    
+
 }
 
 bool Proxy::Run(std::error_code& ec)
@@ -43,12 +44,9 @@ FileDesc Proxy::AcceptConnection(const FileDesc& listen_fd, std::error_code& ec)
 
     if (conn_fd.IsValid())
     {
-        std::cout << "accepted connection" << std::endl;
-
-          /* TODO logging
-          char buffer[INET_ADDRSTRLEN];
-          auto address = inet_ntop(AF_INET, &server_addr.sin_addr, buffer, INET_ADDRSTRLEN);
-          */
+        char buffer[INET_ADDRSTRLEN];
+        auto address = inet_ntop(AF_INET, &clientaddr.sin_addr, buffer, INET_ADDRSTRLEN);
+        LOG(INFO) << "Accepted connection from: " << address << ":" << ntohs(clientaddr.sin_port);
     }
     else
     {
@@ -72,7 +70,7 @@ FileDesc Proxy::BindAndListen(std::error_code& ec)
   bzero(&server_addr, sizeof(server_addr));
   server_addr.sin_family = AF_INET;
   server_addr.sin_port = htons(config.server.port);
-  server_addr.sin_addr.s_addr = htonl(config.server.address.s_addr);
+  server_addr.sin_addr.s_addr = config.server.address.s_addr;
 
   if(bind(server_listen_fd, (struct sockaddr*)&server_addr, sizeof(server_addr)))
   {
@@ -86,10 +84,10 @@ FileDesc Proxy::BindAndListen(std::error_code& ec)
     return FileDesc();
   }
 
-  /* TODO logging
+
   char buffer[INET_ADDRSTRLEN];
   auto address = inet_ntop(AF_INET, &server_addr.sin_addr, buffer, INET_ADDRSTRLEN);
-  */
+  LOG(INFO) << "Listening on: " << address;
 
   return server_listen_fd;
 }

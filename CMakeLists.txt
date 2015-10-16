@@ -21,9 +21,10 @@ set(CMAKE_CXX_FLAGS_RELEASE "-O3")
 set(CMAKE_CXX_FLAGS_DEBUG "-O0 -g")
   
 # include paths for all the local libraries
-include_directories(./libs/src)
-include_directories(./libs/include)
-include_directories(./deps/tclap/include)
+include_directories(libs/src)
+include_directories(libs/include)
+include_directories(deps/tclap/include)
+include_directories(deps/easylogging/src)
 
 # ---- proxy library ----
 file(GLOB_RECURSE proxy_SRC ./libs/src/proxy/*.cpp)

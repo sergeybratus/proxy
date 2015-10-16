@@ -2,9 +2,11 @@
 #include <proxy/ProxyAPI.h>
 
 #include "CommandLineOptions.h"
+#include "easylogging++.h"
+
+INITIALIZE_EASYLOGGINGPP
 
 using namespace proxy;
-
 
 int main (int argc, char *argv[])
 {
@@ -15,7 +17,7 @@ int main (int argc, char *argv[])
     std::error_code ec;
     if(!options.Get(config, ec))
     {
-        std::cerr << "Config error: " << ec.message() << std::endl;
+        LOG(ERROR) << "Config error: " << ec.message() << std::endl;
         return -1;
     }
 
@@ -23,8 +25,8 @@ int main (int argc, char *argv[])
 	
 	if(ec)
 	{
-	  std::cerr << "Proxy error: " << ec.message() << std::endl;
-	  return -1;
+        LOG(ERROR) << "Proxy error: " << ec.message() << std::endl;
+	    return -1;
 	}
 	
 	return 0;

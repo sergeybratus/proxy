@@ -45,3 +45,5 @@
 /.kdev4
 /proxy.kdev4
 
+#easylogging
+/logs
