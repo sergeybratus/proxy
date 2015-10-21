@@ -8,17 +8,17 @@
 namespace proxy
 {
 
-using WriteFun = std::function<void (const uint8_t*, size_t len)>;
+using QueueWriteFun = std::function<void (const uint8_t*, size_t len)>;
 
-class IStreamParser
+class IParser
 {
     public:
-        virtual void Feed(const uint8_t*, size_t len) = 0;
+        virtual bool Feed(const uint8_t*, size_t len) = 0;
 };
 
-class IStreamParserFactory
+class IParserFactory
 {
-        virtual std::unique_ptr<IStreamParser> Create(const WriteFun& write) = 0;
+        virtual std::unique_ptr<IParser> Create(const QueueWriteFun& write) = 0;
 };
     
 }
