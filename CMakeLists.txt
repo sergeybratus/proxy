@@ -15,6 +15,7 @@ else()
 endif()
 
 set(CMAKE_CXX_FLAGS "-Wall -std=c++11")
+set(CMAKE_C_FLAGS "-Wall -std=c99")
 
 # different release and debug flags
 set(CMAKE_CXX_FLAGS_RELEASE "-O3")
@@ -25,6 +26,12 @@ include_directories(libs/src)
 include_directories(libs/include)
 include_directories(deps/tclap/include)
 include_directories(deps/easylogging/src)
+include_directories(deps/dnp3/include)
+
+# ---- dnp3 filter ----
+file(GLOB_RECURSE dnp3hammer_SRC ./deps/dnp3/src/*.c ./deps/dnp3/dissect.c ./deps/dnp3/filter.c)
+add_library(dnp3hammer STATIC ${dnp3hammer_SRC})
+target_link_libraries(dnp3hammer hammer)
 
 # ---- proxy library ----
 file(GLOB_RECURSE proxy_SRC ./libs/src/proxy/*.cpp)
