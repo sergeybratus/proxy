@@ -17,6 +17,7 @@ namespace proxy
         cmd.add(listenAdapter);
         cmd.add(connectPort);
         cmd.add(connectHost);
+        cmd.add(parser);
     }
 
     void CommandLineOptions::Parse(int argc, char** argv)

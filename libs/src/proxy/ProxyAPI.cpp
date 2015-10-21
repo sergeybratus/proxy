@@ -6,9 +6,9 @@
 namespace proxy
 {
   
-bool Run(const ProxyConfig& config, std::error_code& ec)
+bool Run(const ProxyConfig& config, IParserFactory& factory, std::error_code& ec)
 {
-    Proxy proxy(config);
+    Proxy proxy(config, factory);
     return proxy.Run(ec);
 }
     

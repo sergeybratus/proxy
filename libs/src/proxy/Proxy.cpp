@@ -9,7 +9,7 @@
 namespace proxy
 {
   
-Proxy::Proxy(const ProxyConfig& config_) : config(config_)
+Proxy::Proxy(const ProxyConfig& config_, const IParserFactory& factory_) : config(config_), factory(factory_)
 {
 
 }

@@ -7,6 +7,7 @@
 #include "proxy/ProxyConfig.h"
 #include "proxy/Uncopyable.h"
 #include "proxy/FileDesc.h"
+#include "proxy/ParserPlugin.h"
 
 namespace proxy
 {
@@ -16,7 +17,7 @@ class Proxy : private Uncopyable
   
 public:
   
-  Proxy(const ProxyConfig& config);
+  Proxy(const ProxyConfig& config, const IParserFactory& factory);
      
   bool Run(std::error_code& ec);    
   
@@ -40,6 +41,7 @@ private:
   Proxy() = delete;
 
   const ProxyConfig config;
+  const IParserFactory& factory;
 
 };
   
