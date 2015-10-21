@@ -22,6 +22,9 @@ namespace proxy {
     {
     public:
 
+        // return a unique name for the plugin
+        virtual std::string Name() const override { return "null"; }
+
         static IParserFactory& Instance() { return instance; }
 
     private:

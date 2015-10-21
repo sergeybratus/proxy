@@ -18,6 +18,8 @@ class IParser
 
 class IParserFactory
 {
+        virtual std::string Name() const = 0;
+
         virtual std::unique_ptr<IParser> Create(const QueueWriteFun& write) = 0;
 };
     

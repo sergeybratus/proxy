@@ -1,5 +1,5 @@
 
-#include "NullParserPlugin.h"
+#include "proxy/NullParserPlugin.h"
 
 namespace proxy
 {
@@ -12,6 +12,8 @@ bool NullParserPlugin::Feed(const uint8_t* data, size_t len)
     this->write(data, len);
     return true;
 }
+
+NullParserPluginFactory NullParserPluginFactory::instance;
 
 std::unique_ptr<IParser> NullParserPluginFactory::Create(const QueueWriteFun& write)
 {

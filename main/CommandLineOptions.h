@@ -17,7 +17,6 @@ namespace proxy  {
 
         bool Get(ProxyConfig& config, std::error_code& ec);
 
-    private:
         TCLAP::CmdLine cmd;
 
         TCLAP::ValueArg<uint16_t> listenPort;
@@ -25,6 +24,8 @@ namespace proxy  {
 
         TCLAP::ValueArg<uint16_t> connectPort;
         TCLAP::ValueArg<std::string> connectHost;
+
+        TCLAP::ValueArg<std::string> parser;
     };
 
 }

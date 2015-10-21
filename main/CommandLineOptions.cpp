@@ -10,7 +10,8 @@ namespace proxy
             listenAdapter("a", "listenAdapter", "Adapter on which the server listens for connection", false, "127.0.0.1", "ipv4 address"),
             // we make this 20001, just so the default configuration doesn't connect to itself
             connectPort("c", "connPort", "Port on which to connect to the downstream server", false, 20001, "tcp port"),
-            connectHost("n", "connAdapter", "IP address of the downstream host", false, "127.0.0.1", "ipv4 address")
+            connectHost("n", "connAdapter", "IP address of the downstream host", false, "127.0.0.1", "ipv4 address"),
+            parser("s", "parser", "The unique name of the parser to use", false, "null", "name")
     {
         cmd.add(listenPort);
         cmd.add(listenAdapter);
