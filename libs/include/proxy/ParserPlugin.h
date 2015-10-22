@@ -8,7 +8,15 @@
 namespace proxy
 {
 
-using QueueWriteFun = std::function<void (const uint8_t*, size_t len)>;
+class IParserCallbacks
+{
+
+public:
+    virtual void OnErrorMsg(const char *fmt, ...) = 0;
+    virtual void OnDebugMsg(const char *fmt, ...) = 0;
+
+    virtual void QueueWrite(const uint8_t*, size_t len) = 0;
+};
 
 class IParser
 {
@@ -20,7 +28,7 @@ class IParserFactory
 {
         virtual std::string Name() const = 0;
 
-        virtual std::unique_ptr<IParser> Create(const QueueWriteFun& write) = 0;
+        virtual std::unique_ptr<IParser> Create(IParserCallbacks& callbacks) = 0;
 };
     
 }

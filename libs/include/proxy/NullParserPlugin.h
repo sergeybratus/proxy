@@ -9,13 +9,13 @@ namespace proxy {
     {
         public:
 
-        NullParserPlugin(const QueueWriteFun& write);
+        NullParserPlugin(IParserCallbacks& callbacks);
 
         virtual bool Feed(const uint8_t*, size_t len) override;
 
         private:
 
-        QueueWriteFun write;
+        IParserCallbacks& callbacks;
     };
 
     class NullParserPluginFactory final : public IParserFactory
@@ -29,7 +29,7 @@ namespace proxy {
 
     private:
 
-        virtual std::unique_ptr<IParser> Create(const QueueWriteFun& write) override;
+        virtual std::unique_ptr<IParser> Create(IParserCallbacks& callbacks) override;
 
         NullParserPluginFactory() {}
         NullParserPluginFactory(const NullParserPluginFactory&) = delete;
