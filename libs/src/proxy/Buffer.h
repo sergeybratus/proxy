@@ -4,7 +4,10 @@
 
 #include "proxy/Uncopyable.h"
 
-#include <cstdint>
+#include "proxy/RSlice.h"
+#include "proxy/WSlice.h"
+
+#include <memory>
 
 namespace proxy {
 
