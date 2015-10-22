@@ -11,12 +11,15 @@ using namespace proxy;
 
 int main (int argc, char *argv[])
 {
-    /// TODO, wrap the DNP3 parser w/ the API and add it to the map
-    std::map<std::string, IParserFactory*> parserMap;
-    parserMap["null"] = &NullParserPluginFactory::Instance();
-
     CommandLineOptions options;
     options.Parse(argc, argv);
+
+    /// initialize the plugins we'll use
+    /// TODO, wrap the DNP3 parser w/ the API and add it to the map
+    NullParserPluginFactory nullPluginFactory(4096);
+
+    std::map<std::string, IParserFactory*> parserMap;
+    parserMap["null"] = &nullPluginFactory;
 
     ProxyConfig config;
     std::error_code ec;

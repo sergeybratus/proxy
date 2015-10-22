@@ -2,6 +2,8 @@
 #define PROXY_NULLPARSERPLUGIN_H
 
 #include "proxy/ParserPlugin.h"
+#include "proxy/Uncopyable.h"
+#include "proxy/Buffer.h"
 
 namespace proxy {
 
@@ -9,32 +11,32 @@ namespace proxy {
     {
         public:
 
-        NullParserPlugin(IParserCallbacks& callbacks);
+        NullParserPlugin(size_t bufferSize, IParserCallbacks& callbacks);
 
-        virtual bool Feed(const uint8_t*, size_t len) override;
+        virtual bool Parse(const RSlice& input) override;
+
+        virtual WSlice GetWriteSlice() override;
 
         private:
 
-        IParserCallbacks& callbacks;
+
+        Buffer m_buffer;
+        IParserCallbacks& m_callbacks;
     };
 
-    class NullParserPluginFactory final : public IParserFactory
+    class NullParserPluginFactory final : public IParserFactory, private Uncopyable
     {
     public:
 
-        // return a unique name for the plugin
-        virtual std::string Name() const override { return "null"; }
-
-        static IParserFactory& Instance() { return instance; }
+        NullParserPluginFactory(size_t bufferSize = 4096);
 
     private:
 
         virtual std::unique_ptr<IParser> Create(IParserCallbacks& callbacks) override;
 
-        NullParserPluginFactory() {}
-        NullParserPluginFactory(const NullParserPluginFactory&) = delete;
+        NullParserPluginFactory() = delete;
 
-        static NullParserPluginFactory instance;
+        const size_t M_BUFFER_SIZE;
     };
 
 }
