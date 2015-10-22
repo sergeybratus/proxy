@@ -19,28 +19,30 @@ namespace proxy
     class ProxySession : private IParserCallbacks
     {
         public:
+
             ProxySession(const EndpointConfig& config, FileDesc& server_fd, IParserFactory& factory);
 
             void Run();
 
-            /// implement IParserCallbacks
-
-            virtual void OnErrorMsg(const char *fmt, ...) override;
-
-            virtual void OnDebugMsg(const char *fmt, ...) override;
-
-            virtual void QueueWrite(const RSlice& output) override;
-
         private:
 
-            FileDesc Connect(std::error_code& ec);
+            /// ---- implement IParserCallbacks ----
 
-            bool RegisterForDataAvailable(const FileDesc& epoll_fd, const FileDesc& fd, std::error_code &ec);
-            bool Modify(const FileDesc& epoll_fd, int operation, const FileDesc& fd, uint32_t events, std::error_code &ec);
+            virtual void OnErrorMsg(const char *fmt, ...) override;
+            virtual void OnDebugMsg(const char *fmt, ...) override;
+            virtual void QueueWrite(const RSlice& output) override;
+
+            /// ---- private members ----
+
+            static bool RegisterForDataAvailable(const FileDesc& epoll_fd, const FileDesc& fd, std::error_code &ec);
+            static bool Modify(const FileDesc& epoll_fd, int operation, const FileDesc& fd, uint32_t events, std::error_code &ec);
+
+            FileDesc Connect(std::error_code& ec);
 
             bool RunOne(FileDesc& epoll_fd, FileDesc& client_fd, std::error_code &ec);
             bool Transfer(FileDesc& src, FileDesc& dest, IParser& parser, std::error_code &ec);
 
+            /// ---- private members ----
 
             const EndpointConfig m_config;
             FileDesc m_server_fd;

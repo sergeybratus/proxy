@@ -30,7 +30,7 @@ class IParser
         // Return a buffer slice that's available for writing
         virtual WSlice GetWriteSlice() = 0;
 
-        // Ask the parser to process a portion of its input buffer
+        // Ask the parser the written portion of its input buffer
         virtual bool Parse(const RSlice& input) = 0;
 };
 

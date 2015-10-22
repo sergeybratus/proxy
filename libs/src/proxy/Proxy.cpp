@@ -5,8 +5,7 @@
 
 #include <proxy/ErrorCodes.h>
 
-#include <sys/epoll.h>
-#include <unistd.h>
+#include <thread>
 
 namespace proxy
 {
@@ -28,9 +27,12 @@ bool Proxy::Run(std::error_code& ec)
       // For the time being, just handle one connection in a blocking manner
       // until we've reached a PoC stage
 
-      ProxySession session(config.client, server_fd, factory);
+      //auto fun = [this]() {
+          ProxySession session(config.client, server_fd, factory);
+          session.Run();
+      //};
 
-      session.Run();
+      //std::thread sessionThread(fun);
   }
 
   return false;
