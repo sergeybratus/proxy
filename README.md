@@ -31,7 +31,9 @@ The proxy can describe its command line arguments with -h
 > proxyd -h
 USAGE: 
 
-   ./proxyd  [-s <name>] [-n <ipv4 address>] [-c <tcp port>] [-a <ipv4address>] [-l <tcp port>] [--] [--version] [-h]
+   ./proxyd  [-s <name>] [-n <ipv4 address>] .... other args
+   
+   ....
 ```
 
 
