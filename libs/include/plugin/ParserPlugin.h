@@ -27,16 +27,20 @@ class IParser
 {
     public:
 
+        virtual ~IParser() {}
+
         // Return a buffer slice that's available for writing
         virtual WSlice GetWriteSlice() = 0;
 
-        // Ask the parser the written portion of its input buffer
+        // Ask the parser to process the written portion of its input buffer
         virtual bool Parse(size_t num) = 0;
 };
 
 class IParserFactory
 {
     public:
+
+        virtual ~IParserFactory() {}
 
         virtual std::unique_ptr<IParser> Create(IParserCallbacks& callbacks) = 0;
 };

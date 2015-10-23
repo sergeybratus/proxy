@@ -10,7 +10,7 @@ namespace proxy { namespace  dnp3 {
 
 WSlice DNP3Parser::GetWriteSlice()
 {
-        return WSlice(m_plugin->buf, m_plugin->bufsize);
+    return WSlice(m_plugin->buf, m_plugin->bufsize);
 }
 
 bool DNP3Parser::Parse(size_t num)
@@ -30,7 +30,7 @@ DNP3Parser::DNP3Parser(IParserCallbacks& callbacks) :
 {
     if(m_plugin == nullptr)
     {
-        throw std::runtime_error("DNP3 parser init failed!");
+        throw std::runtime_error("DNP3 plugin bind failed");
     }
 }
 
