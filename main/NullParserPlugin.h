@@ -1,9 +1,10 @@
 #ifndef PROXY_NULLPARSERPLUGIN_H
 #define PROXY_NULLPARSERPLUGIN_H
 
-#include "proxy/ParserPlugin.h"
+#include "plugin/ParserPlugin.h"
 #include "proxy/Uncopyable.h"
-#include "proxy/Buffer.h"
+
+#include "Buffer.h"
 
 namespace proxy {
 

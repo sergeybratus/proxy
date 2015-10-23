@@ -3,7 +3,7 @@
 #define PROXY_API_H
 
 #include "ProxyConfig.h"
-#include "ParserPlugin.h"
+#include "plugin/ParserPlugin.h"
 
 #include <vector>
 #include <system_error>

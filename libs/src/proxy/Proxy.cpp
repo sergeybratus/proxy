@@ -10,7 +10,9 @@
 namespace proxy
 {
   
-Proxy::Proxy(const ProxyConfig& config_, IParserFactory& factory_) : config(config_), factory(factory_)
+Proxy::Proxy(const ProxyConfig& config_, IParserFactory& factory_) :
+        config(config_),
+        factory(factory_)
 {
 
 }
@@ -27,12 +29,8 @@ bool Proxy::Run(std::error_code& ec)
       // For the time being, just handle one connection in a blocking manner
       // until we've reached a PoC stage
 
-      //auto fun = [this]() {
-          ProxySession session(config.client, server_fd, factory);
-          session.Run();
-      //};
-
-      //std::thread sessionThread(fun);
+      ProxySession session(config.client, server_fd, factory);
+      session.Run();
   }
 
   return false;

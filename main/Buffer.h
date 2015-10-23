@@ -4,8 +4,8 @@
 
 #include "proxy/Uncopyable.h"
 
-#include "proxy/RSlice.h"
-#include "proxy/WSlice.h"
+#include "plugin/RSlice.h"
+#include "plugin/WSlice.h"
 
 #include <memory>
 

@@ -1,9 +1,9 @@
 
-#ifndef PROXY_PARSER_PLUGIN_H
-#define PROXY_PARSER_PLUGIN_H
+#ifndef PARSER_PLUGIN_H
+#define PARSER_PLUGIN_H
 
-#include "proxy/RSlice.h"
-#include "proxy/WSlice.h"
+#include "RSlice.h"
+#include "WSlice.h"
 
 #include <functional>
 #include <memory>

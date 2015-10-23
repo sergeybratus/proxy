@@ -3,7 +3,7 @@
 #ifndef PROXY_PROXYSESSION_H
 #define PROXY_PROXYSESSION_H
 
-#include <proxy/ParserPlugin.h>
+#include <plugin/ParserPlugin.h>
 #include <proxy/ProxyConfig.h>
 
 #include "proxy/FileDesc.h"

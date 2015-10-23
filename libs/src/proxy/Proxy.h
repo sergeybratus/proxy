@@ -7,7 +7,7 @@
 #include "proxy/ProxyConfig.h"
 #include "proxy/Uncopyable.h"
 #include "proxy/FileDesc.h"
-#include "proxy/ParserPlugin.h"
+#include "plugin/ParserPlugin.h"
 
 namespace proxy
 {

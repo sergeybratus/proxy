@@ -1,7 +1,7 @@
 
 #include <proxy/ProxyAPI.h>
-#include <proxy/NullParserPlugin.h>
 
+#include "NullParserPlugin.h"
 #include "CommandLineOptions.h"
 #include "easylogging++.h"
 
