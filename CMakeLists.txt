@@ -47,5 +47,5 @@ install(TARGETS proxy DESTINATION lib)
 # ---- proxyd ----
 file(GLOB_RECURSE proxyd_SRC ./main/*.cpp)
 add_executable(proxyd ${proxyd_SRC})
-target_link_libraries(proxyd LINK_PUBLIC proxy)
+target_link_libraries(proxyd LINK_PUBLIC proxy dnp3cpp)
 

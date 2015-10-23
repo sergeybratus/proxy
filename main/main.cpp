@@ -5,6 +5,8 @@
 #include "CommandLineOptions.h"
 #include "easylogging++.h"
 
+#include <dnp3cpp/DNP3Factory.h>
+
 INITIALIZE_EASYLOGGINGPP
 
 using namespace proxy;
@@ -43,6 +45,10 @@ std::unique_ptr<IParserFactory> GetFactory(const std::string& name)
     if(name == "null")
     {
         return std::unique_ptr<IParserFactory>(new NullParserPluginFactory(4096));
+    }
+    else if(name == "dnp3")
+    {
+        return std::unique_ptr<IParserFactory>(new dnp3::DNP3Factory());
     }
     else
     {

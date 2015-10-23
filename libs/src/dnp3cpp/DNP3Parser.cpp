@@ -1,9 +1,32 @@
-
 #include "dnp3cpp/DNP3Parser.h"
+
+#include <easylogging++.h>
 
 extern "C"
 {
   #include <plugin.h>
+}
+
+void error(const char *fmt, ...)
+{
+    char buffer[80];
+    va_list args;
+    va_start(args, fmt);
+    snprintf(buffer, 80, fmt, args);
+    va_end(args);
+
+    LOG(ERROR) << buffer;
+}
+
+void debug_(const char *fmt, ...)
+{
+    char buffer[80];
+    va_list args;
+    va_start(args, fmt);
+    snprintf(buffer, 80, fmt, args);
+    va_end(args);
+
+    LOG(DEBUG) << buffer;
 }
 
 namespace proxy { namespace  dnp3 {

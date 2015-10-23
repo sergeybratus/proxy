@@ -11,6 +11,8 @@ namespace proxy { namespace  dnp3 {
 
 DNP3Factory::DNP3Factory()
 {
+    static bool initialized = false;
+
     if(!initialized)
     {
         // TODO - determine if there are any global options we need to parameterize
