@@ -9,9 +9,9 @@ NullParserPlugin::NullParserPlugin(size_t bufferSize, IParserCallbacks& callback
         m_callbacks(callbacks_)
 {}
 
-bool NullParserPlugin::Parse(const RSlice& data)
+bool NullParserPlugin::Parse(size_t num)
 {
-    m_callbacks.QueueWrite(data);
+    m_callbacks.QueueWrite(m_buffer.ToRSlice().Take(num));
     return true;
 }
 

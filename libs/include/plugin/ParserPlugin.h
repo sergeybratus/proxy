@@ -31,7 +31,7 @@ class IParser
         virtual WSlice GetWriteSlice() = 0;
 
         // Ask the parser the written portion of its input buffer
-        virtual bool Parse(const RSlice& input) = 0;
+        virtual bool Parse(size_t num) = 0;
 };
 
 class IParserFactory

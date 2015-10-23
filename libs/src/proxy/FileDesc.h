@@ -2,7 +2,7 @@
 #ifndef PROXY_FILEDESC_H
 #define PROXY_FILEDESC_H
 
-#include "Uncopyable.h"
+#include <plugin/Uncopyable.h>
 
 namespace proxy {
 

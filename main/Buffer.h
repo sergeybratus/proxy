@@ -2,10 +2,10 @@
 #ifndef PROXY_BUFFER_H
 #define PROXY_BUFFER_H
 
-#include "proxy/Uncopyable.h"
+#include <plugin/Uncopyable.h>
 
-#include "plugin/RSlice.h"
-#include "plugin/WSlice.h"
+#include <plugin/RSlice.h>
+#include <plugin/WSlice.h>
 
 #include <memory>
 

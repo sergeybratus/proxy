@@ -131,11 +131,10 @@ bool ProxySession::Transfer(FileDesc& src, FileDesc& dest, IParser& parser, std:
             return false;
     }
 
-    RSlice readyBytes = inBuff.ToRSlice().Take(numRead);
-
     // now notify the parser that we wrote some data into its input buffer
-    const bool SUCCESS = parser.Parse(readyBytes);
+    const bool SUCCESS = parser.Parse(numRead);
 
+    // TODO - Do we even want to write the output if SUCCESS is false?
     while(!this->m_output_vec.empty())
     {
         RSlice slice = m_output_vec.front();

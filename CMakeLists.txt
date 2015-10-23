@@ -27,11 +27,17 @@ include_directories(libs/include)
 include_directories(deps/tclap/include)
 include_directories(deps/easylogging/src)
 include_directories(deps/dnp3/include)
+include_directories(deps/dnp3)
 
 # ---- dnp3 filter ----
 file(GLOB_RECURSE dnp3hammer_SRC ./deps/dnp3/src/*.c ./deps/dnp3/dissect.c ./deps/dnp3/filter.c)
 add_library(dnp3hammer STATIC ${dnp3hammer_SRC})
 target_link_libraries(dnp3hammer hammer)
+
+# ---- dnp3cpp adapter ----
+file(GLOB_RECURSE dnp3cpp_SRC libs/src/dnp3cpp/*.cpp)
+add_library(dnp3cpp STATIC ${dnp3cpp_SRC})
+target_link_libraries(dnp3cpp dnp3hammer)
 
 # ---- proxy library ----
 file(GLOB_RECURSE proxy_SRC ./libs/src/proxy/*.cpp)
