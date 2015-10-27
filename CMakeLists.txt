@@ -8,6 +8,10 @@ set(PROXY_VERSION ${PROXY_MAJOR_VERSION}.${PROXY_MINOR_VERSION}.${PROXY_MICRO_VE
 # other options off-by-default that you can enable
 option(WERROR "Set all warnings to errors" OFF)
 
+# PkgConfig
+FIND_PACKAGE(PkgConfig) # tell cmake to require pkg-config
+PKG_CHECK_MODULES(GLIB2 REQUIRED glib-2.0>=2.36.0)
+
 if(STATICLIBS)
       set(LIB_TYPE STATIC)
 else()
@@ -28,15 +32,21 @@ include_directories(deps/tclap/include)
 include_directories(deps/easylogging/src)
 include_directories(deps/dnp3/include)
 include_directories(deps/dnp3)
+# for the dnp3-hammer tests
+include_directories(${GLIB2_INCLUDE_DIRS})
 
 # ---- dnp3 filter ----
 file(GLOB_RECURSE dnp3hammer_SRC ./deps/dnp3/src/*.c ./deps/dnp3/dissect.c ./deps/dnp3/filter.c)
-add_library(dnp3hammer STATIC ${dnp3hammer_SRC})
+add_library(dnp3hammer ${LIB_TYPE} ${dnp3hammer_SRC})
 target_link_libraries(dnp3hammer hammer)
+
+# ---- test suite ----
+add_executable(dnp3-tests ./deps/dnp3/test.c)
+target_link_libraries(dnp3-tests dnp3hammer ${GLIB2_LIBRARIES})
 
 # ---- dnp3cpp adapter ----
 file(GLOB_RECURSE dnp3cpp_SRC libs/src/dnp3cpp/*.cpp)
-add_library(dnp3cpp STATIC ${dnp3cpp_SRC})
+add_library(dnp3cpp ${LIB_TYPE} ${dnp3cpp_SRC})
 target_link_libraries(dnp3cpp dnp3hammer)
 
 # ---- proxy library ----
