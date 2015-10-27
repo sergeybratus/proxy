@@ -59,3 +59,7 @@ file(GLOB_RECURSE proxyd_SRC ./main/*.cpp)
 add_executable(proxyd ${proxyd_SRC})
 target_link_libraries(proxyd LINK_PUBLIC proxy dnp3cpp)
 
+# ---- dnp3-app-afl
+file(GLOB_RECURSE dnp3_app_afl_SRC ./afl/main.cpp)
+add_executable(dnp3-app-afl ${dnp3_app_afl_SRC})
+target_link_libraries(dnp3-app-afl LINK_PUBLIC dnp3hammer)
