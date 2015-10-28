@@ -9,5 +9,5 @@ Build and install hammer using AFL instrumentation
 Build and install the proxy project using cmake: (assuming build dir is a subdirectory of project root)
 
 ```
-> CC=afl gcc CXX=afl-g++ cmake ..\
+> CC=afl-gcc CXX=afl-g++ cmake ..\
 ```
