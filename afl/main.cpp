@@ -5,6 +5,18 @@ extern "C"
     #include <dnp3.h>
 }
 
+int TestParser(const HParser* parser, const uint8_t* data, size_t len)
+{
+    HParseResult *res = h_parse(parser, data, len);
+    if (!res) {
+        return -1;
+    }
+
+    h_parse_result_free(res);	
+
+    return 0;
+}
+
 int main (int argc, char *argv[])
 {
     const size_t MAX_BYTES = 4096;
@@ -20,14 +32,11 @@ int main (int argc, char *argv[])
 
     std::cout << "Processing " << NUM_READ << " bytes" << std::endl;
 
-    auto parser = dnp3_p_app_request;
-
-    HParseResult *res = h_parse(parser, buffer, NUM_READ);
-    if (!res) {
-      return -1;
-    }
-
-    h_delete_arena(res->arena);
+    /// run every test value through both parsers
+    TestParser(dnp3_p_app_request, buffer, NUM_READ);
+    std::cout << "Invoking request parser" << std::endl;
+    TestParser(dnp3_p_app_response, buffer, NUM_READ);
+    std::cout << "Invoking response parser" << std::endl;
 
     return 0;
 }
