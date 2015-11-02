@@ -4,6 +4,7 @@
 #include <dnp3cpp/DNP3Factory.h>
 
 #include "mocks/MockParserCallbacks.h"
+#include "mocks/HexData.h"
 
 using namespace proxy;
 using namespace proxy::dnp3;
@@ -27,7 +28,14 @@ TEST_CASE(SUITE("Bad link data is rejected by parser"))
     MockParserCallbacks callbacks;
     auto parser = factory.Create(callbacks);
 
+    HexData input("FF FF FF FF FF FF FF FF FF FF");
+    REQUIRE(input.GetSlice().Size() == 10);
 
+    auto dest = parser->GetWriteSlice();
+    REQUIRE(dest.Size() >= 10);
+    REQUIRE(input.GetSlice().CopyTo(dest).Size() > 0);
+
+    REQUIRE_FALSE(parser->Parse(10));
 }
 
 

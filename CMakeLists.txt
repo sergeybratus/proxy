@@ -46,10 +46,14 @@ target_link_libraries(dnp3hammer hammer)
 add_executable(dnp3-tests ./deps/dnp3/test.c)
 target_link_libraries(dnp3-tests dnp3hammer ${GLIB2_LIBRARIES})
 
+# ---- plugin library ----
+file(GLOB_RECURSE plugin_SRC libs/src/plugin/*.cpp)
+add_library(plugin ${LIB_TYPE} ${plugin_SRC})
+
 # ---- dnp3cpp adapter ----
 file(GLOB_RECURSE dnp3cpp_SRC libs/src/dnp3cpp/*.cpp)
 add_library(dnp3cpp ${LIB_TYPE} ${dnp3cpp_SRC})
-target_link_libraries(dnp3cpp dnp3hammer)
+target_link_libraries(dnp3cpp plugin dnp3hammer)
 
 # ---- dnp3 plugin tests ----
 file(GLOB_RECURSE dnp3plugintests_SRC ./test/dnp3/*.cpp)
@@ -60,6 +64,7 @@ target_link_libraries(dnp3-plugin-tests dnp3cpp)
 file(GLOB_RECURSE proxy_SRC ./libs/src/proxy/*.cpp)
 add_library(proxy ${LIB_TYPE} ${proxy_SRC})
 install(TARGETS proxy DESTINATION lib)
+target_link_libraries(proxy plugin)
 
 # ---- proxyd ----
 file(GLOB_RECURSE proxyd_SRC ./main/*.cpp)

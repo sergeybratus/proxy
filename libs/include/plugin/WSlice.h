@@ -4,6 +4,8 @@
 
 #include <cstdint>
 
+#include "RSlice.h"
+
 namespace proxy
 {
     // A write-able "slice" of a buffer

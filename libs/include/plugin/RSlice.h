@@ -7,30 +7,22 @@
 
 namespace proxy
 {
+    class WSlice;
+
     // A readonly "slice" of a buffer
     class RSlice
     {
 
         public:
 
-        RSlice() : m_buffer(nullptr), m_size(0)
-        {}
+        RSlice();
+        RSlice(uint8_t const* buffer, size_t size);
 
-        RSlice(uint8_t const* buffer, size_t size) : m_buffer(buffer), m_size(size)
-        {}
+        RSlice Take(size_t count) const;
 
-        RSlice Take(size_t count) const
-        {
-            const auto NUM = (count > m_size) ? m_size : count;
-            return  RSlice(m_buffer, NUM);
-        }
+        RSlice CopyTo(WSlice& dest) const;
 
-        void Advance(size_t count)
-        {
-            const auto NUM = (count > m_size) ? m_size : count;
-            m_size -= NUM;
-            m_buffer += NUM;
-        }
+        void Advance(size_t count);
 
         operator uint8_t const* () const
         {
