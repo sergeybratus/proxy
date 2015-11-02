@@ -34,6 +34,8 @@ include_directories(deps/dnp3/include)
 include_directories(deps/dnp3)
 # for the dnp3-hammer tests
 include_directories(${GLIB2_INCLUDE_DIRS})
+# for the C++ integration tests of the proxy
+include_directories(./deps/catch)
 
 # ---- dnp3 filter ----
 file(GLOB_RECURSE dnp3hammer_SRC ./deps/dnp3/src/*.c ./deps/dnp3/dissect.c ./deps/dnp3/filter.c)
@@ -48,6 +50,11 @@ target_link_libraries(dnp3-tests dnp3hammer ${GLIB2_LIBRARIES})
 file(GLOB_RECURSE dnp3cpp_SRC libs/src/dnp3cpp/*.cpp)
 add_library(dnp3cpp ${LIB_TYPE} ${dnp3cpp_SRC})
 target_link_libraries(dnp3cpp dnp3hammer)
+
+# ---- dnp3 plugin tests ----
+file(GLOB_RECURSE dnp3plugintests_SRC ./test/dnp3/*.cpp)
+add_executable(dnp3-plugin-tests ${dnp3plugintests_SRC})
+target_link_libraries(dnp3-plugin-tests dnp3cpp)
 
 # ---- proxy library ----
 file(GLOB_RECURSE proxy_SRC ./libs/src/proxy/*.cpp)
