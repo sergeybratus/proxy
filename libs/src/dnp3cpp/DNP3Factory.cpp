@@ -1,10 +1,6 @@
 #include "dnp3cpp/DNP3Factory.h"
 
-extern "C"
-{
-    #include <plugin.h>
-}
-
+#include "dnp3hammer/plugin.h"
 #include "dnp3cpp/DNP3Parser.h"
 
 namespace proxy { namespace  dnp3 {

@@ -12,11 +12,8 @@ option(WERROR "Set all warnings to errors" OFF)
 FIND_PACKAGE(PkgConfig) # tell cmake to require pkg-config
 PKG_CHECK_MODULES(GLIB2 REQUIRED glib-2.0>=2.36.0)
 
-if(STATICLIBS)
-      set(LIB_TYPE STATIC)
-else()
-      set(LIB_TYPE SHARED)
-endif()
+
+set(LIB_TYPE STATIC)
 
 set(CMAKE_CXX_FLAGS "-Wall -std=c++11")
 set(CMAKE_C_FLAGS "-Wall -std=c99")
@@ -24,27 +21,22 @@ set(CMAKE_C_FLAGS "-Wall -std=c99")
 # different release and debug flags
 set(CMAKE_CXX_FLAGS_RELEASE "-O3")
 set(CMAKE_CXX_FLAGS_DEBUG "-O0 -g")
+
+# add the parser as a cmake subdirectory
+add_subdirectory(deps/dnp3)
   
 # include paths for all the local libraries
 include_directories(libs/src)
 include_directories(libs/include)
 include_directories(deps/tclap/include)
 include_directories(deps/easylogging/src)
-include_directories(deps/dnp3/include)
-include_directories(deps/dnp3)
+include_directories(deps/dnp3/lib/include)
+
+#include_directories(deps/dnp3)
 # for the dnp3-hammer tests
-include_directories(${GLIB2_INCLUDE_DIRS})
+#include_directories(${GLIB2_INCLUDE_DIRS})
 # for the C++ integration tests of the proxy
-include_directories(./deps/catch)
-
-# ---- dnp3 filter ----
-file(GLOB_RECURSE dnp3hammer_SRC ./deps/dnp3/src/*.c ./deps/dnp3/dissect.c ./deps/dnp3/filter.c)
-add_library(dnp3hammer ${LIB_TYPE} ${dnp3hammer_SRC})
-target_link_libraries(dnp3hammer hammer)
-
-# ---- test suite ----
-add_executable(dnp3-tests ./deps/dnp3/test.c)
-target_link_libraries(dnp3-tests dnp3hammer ${GLIB2_LIBRARIES})
+#include_directories(./deps/catch)
 
 # ---- plugin library ----
 file(GLOB_RECURSE plugin_SRC libs/src/plugin/*.cpp)

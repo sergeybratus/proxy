@@ -5,16 +5,7 @@
 #include <plugin/ParserPlugin.h>
 #include <plugin/Uncopyable.h>
 
-extern "C"
-{
-    // forward declare the C-struct
-    typedef struct Plugin_ Plugin;
-
-    void error(const char *fmt, ...);
-    void debug_(const char *fmt, ...);
-
-}
-
+#include <dnp3hammer/dissect.h>
 
 namespace proxy { namespace  dnp3 {
 
