@@ -5,7 +5,7 @@
 #include <plugin/ParserPlugin.h>
 #include <plugin/Uncopyable.h>
 
-#include <dnp3hammer/dissect.h>
+#include <dnp3hammer.h>
 
 namespace proxy { namespace  dnp3 {
 
@@ -28,7 +28,7 @@ namespace proxy { namespace  dnp3 {
             static void QueueOutput(void *env, const uint8_t *buf, size_t n);
 
             IParserCallbacks& m_callbacks;
-            Plugin* m_plugin;
+            StreamProcessor* m_plugin;
     };
 
 }}

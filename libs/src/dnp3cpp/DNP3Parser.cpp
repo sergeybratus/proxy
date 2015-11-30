@@ -1,7 +1,7 @@
 #include "dnp3cpp/DNP3Parser.h"
 
 
-
+/*
 void hook_link_frame(DissectPlugin *self, const DNP3_Frame *frame, const uint8_t *buf, size_t len)
 {}
 
@@ -22,6 +22,7 @@ void hook_app_error(DissectPlugin *self, DNP3_ParseError e)
 
 void hook_app_fragment(DissectPlugin *self, const DNP3_Fragment *fragment, const uint8_t *buf, size_t len)
 {}
+*/
 
 namespace proxy { namespace  dnp3 {
 
@@ -43,7 +44,7 @@ void DNP3Parser::QueueOutput(void *env, const uint8_t *buf, size_t n)
 
 DNP3Parser::DNP3Parser(IParserCallbacks& callbacks) :
         m_callbacks(callbacks),
-        m_plugin(dnp3_dissect(&QueueOutput, this))
+        m_plugin(nullptr)
 {
     if(m_plugin == nullptr)
     {

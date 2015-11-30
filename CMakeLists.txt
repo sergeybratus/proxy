@@ -30,7 +30,7 @@ include_directories(libs/src)
 include_directories(libs/include)
 include_directories(deps/tclap/include)
 include_directories(deps/easylogging/src)
-include_directories(deps/dnp3/lib/include)
+include_directories(deps/dnp3/include)
 
 #include_directories(deps/dnp3)
 # for the dnp3-hammer tests
