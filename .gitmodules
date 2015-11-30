@@ -4,6 +4,3 @@
 [submodule "deps/easylogging"]
 	path = deps/easylogging
 	url = https://github.com/easylogging/easyloggingpp.git
-[submodule "deps/dnp3"]
-	path = deps/dnp3
-	url = https://github.com/pesco/dnp3.git
