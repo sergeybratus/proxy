@@ -21,28 +21,6 @@ ProxySession::ProxySession(const EndpointConfig& config_, FileDesc& server_fd_, 
 
 }
 
-void ProxySession::OnErrorMsg(const char *fmt, ...)
-{
-        char buffer[80];
-        va_list args;
-        va_start(args, fmt);
-        snprintf(buffer, 80, fmt, args);
-        va_end(args);
-
-        LOG(ERROR) << buffer;
-}
-
-void ProxySession::OnDebugMsg(const char *fmt, ...)
-{
-        char buffer[80];
-        va_list args;
-        va_start(args, fmt);
-        snprintf(buffer, 80, fmt, args);
-        va_end(args);
-
-        LOG(DEBUG) << buffer;
-}
-
 void ProxySession::QueueWrite(const RSlice& output)
 {
         this->m_output_vec.push_back(output);

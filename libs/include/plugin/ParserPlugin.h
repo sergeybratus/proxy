@@ -16,10 +16,6 @@ class IParserCallbacks
 
 public:
 
-    virtual void OnErrorMsg(const char *fmt, ...) = 0;
-
-    virtual void OnDebugMsg(const char *fmt, ...) = 0;
-
     virtual void QueueWrite(const RSlice& data) = 0;
 };
 
@@ -33,6 +29,7 @@ class IParser
         virtual WSlice GetWriteSlice() = 0;
 
         // Ask the parser to process the written portion of its input buffer
+        // return false if the parser violates some kind of
         virtual bool Parse(size_t num) = 0;
 };
 

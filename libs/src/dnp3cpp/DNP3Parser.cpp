@@ -1,30 +1,24 @@
 #include "dnp3cpp/DNP3Parser.h"
 
-
-/*
-void hook_link_frame(DissectPlugin *self, const DNP3_Frame *frame, const uint8_t *buf, size_t len)
-{}
-
-void hook_transport_reject(DissectPlugin *self)
-{}
-
-void hook_transport_segment(DissectPlugin *self, const DNP3_Segment *segment)
-{}
-
-void hook_transport_payload(DissectPlugin *self, const uint8_t *s, size_t n)
-{}
-
-void hook_app_reject(DissectPlugin *self)
-{}
-
-void hook_app_error(DissectPlugin *self, DNP3_ParseError e)
-{}
-
-void hook_app_fragment(DissectPlugin *self, const DNP3_Fragment *fragment, const uint8_t *buf, size_t len)
-{}
-*/
-
 namespace proxy { namespace  dnp3 {
+
+DNP3Parser::DNP3Parser(IParserCallbacks& callbacks) :
+        m_callbacks(callbacks),
+        m_plugin(dnp3_dissector(GetCallbacks(), this))
+{
+    if(m_plugin == nullptr)
+    {
+        throw std::runtime_error("dnp3_dissector init failure");
+    }
+}
+
+DNP3Parser::~DNP3Parser()
+{
+    if(m_plugin)
+    {
+        m_plugin->finish(m_plugin);
+    }
+}
 
 WSlice DNP3Parser::GetWriteSlice()
 {
@@ -36,28 +30,50 @@ bool DNP3Parser::Parse(size_t num)
     return m_plugin->feed(m_plugin, num);
 }
 
-void DNP3Parser::QueueOutput(void *env, const uint8_t *buf, size_t n)
+DNP3_Callbacks DNP3Parser::GetCallbacks()
 {
-    auto parser = reinterpret_cast<DNP3Parser*>(env);
-    parser->m_callbacks.QueueWrite(RSlice(buf, n));
+    return DNP3_Callbacks {
+            .link_frame = &DNP3Parser::OnLinkFrame,
+            .transport_segment = &DNP3Parser::OnTransportSegment,
+            .transport_payload = &DNP3Parser::OnTransportPayload,
+            .app_invalid = &DNP3Parser::OnAppInvalid,
+            .app_fragment = &DNP3Parser::OnAppFragment
+    };
 }
 
-DNP3Parser::DNP3Parser(IParserCallbacks& callbacks) :
-        m_callbacks(callbacks),
-        m_plugin(nullptr)
+void DNP3Parser::OnLinkFrame(void *env, const DNP3_Frame *frame, const uint8_t *buf, size_t len)
 {
-    if(m_plugin == nullptr)
-    {
-        throw std::runtime_error("DNP3 plugin bind failed");
+    if(frame->func == DNP3_UNCONFIRMED_USER_DATA ||
+       frame->func == DNP3_CONFIRMED_USER_DATA) {
+        return;
     }
+
+    reinterpret_cast<DNP3Parser*>(env)->m_callbacks.QueueWrite(RSlice(buf, len));
 }
 
-DNP3Parser::~DNP3Parser()
+void DNP3Parser::OnTransportSegment(void *env, const DNP3_Segment *segment)
 {
-    if(m_plugin)
-    {
-        m_plugin->finish(m_plugin);
-    }
+
+}
+
+void DNP3Parser::OnTransportPayload(void *env, const uint8_t *s, size_t n)
+{
+
+}
+
+void DNP3Parser::OnAppInvalid(void *env, DNP3_ParseError e)
+{
+
+}
+
+void DNP3Parser::OnAppFragment(void *env, const DNP3_Fragment *fragment, const uint8_t *buf, size_t len)
+{
+    reinterpret_cast<DNP3Parser*>(env)->m_callbacks.QueueWrite(RSlice(buf, len));
+}
+
+void DNP3Parser::OnLogError(void *env, const char *fmt, ...)
+{
+
 }
 
 }}

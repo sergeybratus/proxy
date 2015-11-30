@@ -15,7 +15,7 @@ DNP3Factory::DNP3Factory()
     }
 }
 
-std::unique_ptr<IParser> DNP3Factory::Create(IParserCallbacks &callbacks)
+std::unique_ptr<IParser> DNP3Factory::Create(IParserCallbacks& callbacks)
 {
     return std::unique_ptr<IParser>(new DNP3Parser(callbacks));
 }

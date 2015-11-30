@@ -28,8 +28,6 @@ namespace proxy
 
             /// ---- implement IParserCallbacks ----
 
-            virtual void OnErrorMsg(const char *fmt, ...) override;
-            virtual void OnDebugMsg(const char *fmt, ...) override;
             virtual void QueueWrite(const RSlice& output) override;
 
             /// ---- private members ----

@@ -25,7 +25,14 @@ namespace proxy { namespace  dnp3 {
 
         private:
 
-            static void QueueOutput(void *env, const uint8_t *buf, size_t n);
+            static DNP3_Callbacks GetCallbacks();
+
+            static void OnLinkFrame(void *env, const DNP3_Frame *frame, const uint8_t *buf, size_t len);
+            static void OnTransportSegment(void *env, const DNP3_Segment *segment);
+            static void OnTransportPayload(void *env, const uint8_t *s, size_t n);
+            static void OnAppInvalid(void *env, DNP3_ParseError e);
+            static void OnAppFragment(void *env, const DNP3_Fragment *fragment, const uint8_t *buf, size_t len);
+            static void OnLogError(void *env, const char *fmt, ...);
 
             IParserCallbacks& m_callbacks;
             StreamProcessor* m_plugin;
