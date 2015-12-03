@@ -25,7 +25,7 @@ NullParserPluginFactory::NullParserPluginFactory(size_t bufferSize) : M_BUFFER_S
 
 }
 
-std::unique_ptr<IParser> NullParserPluginFactory::Create(IParserCallbacks& callbacks)
+std::unique_ptr<IParser> NullParserPluginFactory::Create(SessionDir, IParserCallbacks& callbacks)
 {
     return std::unique_ptr<IParser>(new NullParserPlugin(M_BUFFER_SIZE, callbacks));
 }

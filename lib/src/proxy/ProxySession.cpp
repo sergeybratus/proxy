@@ -15,8 +15,8 @@ namespace proxy
 ProxySession::ProxySession(const EndpointConfig& config_, FileDesc& server_fd_, IParserFactory& factory) :
         m_config(config_),
         m_server_fd(std::move(server_fd_)),
-        m_s2cParser(std::move(factory.Create(*this))),
-        m_c2sParser(std::move(factory.Create(*this)))
+        m_s2cParser(std::move(factory.Create(SessionDir::ServerToClient, *this))),
+        m_c2sParser(std::move(factory.Create(SessionDir::ClientToServer, *this)))
 {
 
 }

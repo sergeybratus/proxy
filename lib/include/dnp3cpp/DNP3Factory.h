@@ -13,7 +13,7 @@ namespace proxy { namespace  dnp3 {
 
         DNP3Factory();
 
-        virtual std::unique_ptr<IParser> Create(IParserCallbacks& callbacks) override;
+        virtual std::unique_ptr<IParser> Create(SessionDir dir, IParserCallbacks& callbacks) override;
     };
 
 }}

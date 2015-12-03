@@ -13,7 +13,7 @@ namespace proxy { namespace  dnp3 {
 
             friend class DNP3Factory;
 
-            DNP3Parser(IParserCallbacks& callbacks);
+            DNP3Parser(SessionDir dir, IParserCallbacks& callbacks);
 
         public:
 
@@ -25,6 +25,7 @@ namespace proxy { namespace  dnp3 {
 
         private:
 
+
             static DNP3_Callbacks GetCallbacks();
 
             static void OnLinkFrame(void *env, const DNP3_Frame *frame, const uint8_t *buf, size_t len);
@@ -34,6 +35,7 @@ namespace proxy { namespace  dnp3 {
             static void OnAppFragment(void *env, const DNP3_Fragment *fragment, const uint8_t *buf, size_t len);
             static void OnLogError(void *env, const char *fmt, ...);
 
+            const char* m_dir;
             IParserCallbacks& m_callbacks;
             StreamProcessor* m_plugin;
     };

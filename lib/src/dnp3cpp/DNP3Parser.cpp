@@ -4,7 +4,8 @@
 
 namespace proxy { namespace  dnp3 {
 
-DNP3Parser::DNP3Parser(IParserCallbacks& callbacks) :
+DNP3Parser::DNP3Parser(SessionDir dir, IParserCallbacks& callbacks) :\
+        m_dir(dir == SessionDir::ClientToServer ? " -c-> " : " <-s- "),
         m_callbacks(callbacks),
         m_plugin(dnp3_dissector(GetCallbacks(), this))
 {
@@ -45,9 +46,11 @@ DNP3_Callbacks DNP3Parser::GetCallbacks()
 
 void DNP3Parser::OnLinkFrame(void *env, const DNP3_Frame *frame, const uint8_t *buf, size_t len)
 {
-    // TODO - correct log level?
+    auto parser = reinterpret_cast<DNP3Parser*>(env);
+
+    // TODO - correct log level - should we use the formatting function here?
     char* output = dnp3_format_frame(frame);
-    LOG(TRACE) << output;
+    LOG(TRACE) << parser->m_dir << output;
     free(output);
 
     if(frame->func == DNP3_UNCONFIRMED_USER_DATA ||
@@ -55,32 +58,35 @@ void DNP3Parser::OnLinkFrame(void *env, const DNP3_Frame *frame, const uint8_t *
         return;
     }
 
-    reinterpret_cast<DNP3Parser*>(env)->m_callbacks.QueueWrite(RSlice(buf, len));
+    parser->m_callbacks.QueueWrite(RSlice(buf, len));
 }
 
 void DNP3Parser::OnTransportSegment(void *env, const DNP3_Segment *segment)
 {
-
+    // -- TODO -- logging?
 }
 
 void DNP3Parser::OnTransportPayload(void *env, const uint8_t *s, size_t n)
 {
-
+    // nothing
 }
 
 void DNP3Parser::OnAppInvalid(void *env, DNP3_ParseError e)
 {
-
+    // -- TODO - set a flag so we can drop session
 }
 
 void DNP3Parser::OnAppFragment(void *env, const DNP3_Fragment *fragment, const uint8_t *buf, size_t len)
 {
-    // TODO - correct log level?
+    auto parser = reinterpret_cast<DNP3Parser*>(env);
+
+    // TODO - correct log level- can we get a lighter level of inspection
+    // and make doing this dependent on logging being enabled?
     char* output = dnp3_format_fragment(fragment);
-    LOG(TRACE) << output;
+    LOG(TRACE) << parser->m_dir << output;
     free(output);
 
-    reinterpret_cast<DNP3Parser*>(env)->m_callbacks.QueueWrite(RSlice(buf, len));
+    parser->m_callbacks.QueueWrite(RSlice(buf, len));
 }
 
 void DNP3Parser::OnLogError(void *env, const char *fmt, ...)

@@ -11,6 +11,11 @@
 namespace proxy
 {
 
+enum class SessionDir : uint8_t {
+    ClientToServer,
+    ServerToClient
+};
+
 class IParserCallbacks
 {
 
@@ -39,7 +44,7 @@ class IParserFactory
 
         virtual ~IParserFactory() {}
 
-        virtual std::unique_ptr<IParser> Create(IParserCallbacks& callbacks) = 0;
+        virtual std::unique_ptr<IParser> Create(SessionDir dir, IParserCallbacks& callbacks) = 0;
 };
     
 }

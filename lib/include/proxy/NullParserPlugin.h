@@ -33,7 +33,7 @@ namespace proxy {
 
     private:
 
-        virtual std::unique_ptr<IParser> Create(IParserCallbacks& callbacks) override;
+        virtual std::unique_ptr<IParser> Create(SessionDir dir, IParserCallbacks& callbacks) override;
 
         NullParserPluginFactory() = delete;
 

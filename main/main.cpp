@@ -27,10 +27,9 @@ int main (int argc, char *argv[])
         return -1;
     }
 
+    LOG(INFO) << "Using parser: " << options.parser.getValue();
 
     auto factory = GetFactory(options.parser.getValue());
-
-    LOG(INFO) << "Using parser: " << options.parser.getValue();
 
 	proxy::Run(config, *factory, ec);
 	
