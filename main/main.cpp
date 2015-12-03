@@ -1,11 +1,12 @@
 
 #include <proxy/ProxyAPI.h>
+#include <proxy/NullParserPlugin.h>
+#include <dnp3cpp/DNP3Factory.h>
 
-#include "NullParserPlugin.h"
 #include "CommandLineOptions.h"
 #include "easylogging++.h"
 
-#include <dnp3cpp/DNP3Factory.h>
+
 
 INITIALIZE_EASYLOGGINGPP
 
