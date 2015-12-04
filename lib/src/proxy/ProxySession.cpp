@@ -12,7 +12,7 @@
 namespace proxy
 {
 
-ProxySession::ProxySession(const EndpointConfig& config_, FileDesc& server_fd_, IParserFactory& factory) :
+ProxySession::ProxySession(const ProxyConfig& config_, FileDesc& server_fd_, IParserFactory& factory) :
         m_config(config_),
         m_server_fd(std::move(server_fd_)),
         m_s2cParser(std::move(factory.Create(SessionDir::ServerToClient, *this))),
@@ -26,9 +26,8 @@ void ProxySession::QueueWrite(const RSlice& output)
         this->m_output_vec.push_back(output);
 }
 
-void ProxySession::Run()
+void ProxySession::Run(std::error_code& ec)
 {
-        std::error_code ec;
         FileDesc client_fd(Connect(ec));
 
         if(ec)
@@ -45,14 +44,12 @@ void ProxySession::Run()
         if(!epoll_fd.IsValid())
         {
                 ec = std::error_code(errno, std::system_category());
-                LOG(ERROR) << "Error creating epoll fd: " << ec.message();
                 return;
         }
 
         if(!RegisterForDataAvailable(epoll_fd, m_server_fd, ec) || !RegisterForDataAvailable(epoll_fd, client_fd, ec))
         {
                 ec = std::error_code(errno, std::system_category());
-                LOG(ERROR) << "Error registering epoll fd: " << ec.message();
                 return;
         }
 
@@ -112,27 +109,58 @@ bool ProxySession::Transfer(FileDesc& src, FileDesc& dest, IParser& parser, std:
     // now notify the parser that we wrote some data into its input buffer
     const bool SUCCESS = parser.Parse(numRead);
 
-    // TODO - Do we even want to write the output if SUCCESS is false?
-    while(!this->m_output_vec.empty())
+    // in observe only mode we ignore what the parser tells us to write,
+    // and just write the input buffer back out ourselves
+    if(m_config.observeOnly) {
+
+        this->m_output_vec.clear();
+        this->WriteAll(dest, RSlice(inBuff, numRead), ec);
+    }
+    else {
+
+        // otherwise we rely on the plugin to tell us what to write out
+        // TODO - Do we even want to write the output if SUCCESS is false?
+        this->WriteOutputTo(dest, ec);
+    }
+
+    return ec.value();
+}
+
+bool ProxySession::WriteOutputTo(FileDesc& dest, std::error_code &ec)
+{
+    while(!ec && !this->m_output_vec.empty())
     {
         RSlice slice = m_output_vec.front();
         m_output_vec.pop_front();
 
-        while(!slice.IsEmpty())
-        {
-            auto numWritten = write(dest, slice, slice.Size());
-
-            if (numWritten <= 0) {
-                ec = std::error_code(errno, std::system_category());
-                return false;
-            }
-
-            slice.Advance(numWritten);
-        }
+        WriteAll(dest, slice, ec);
     }
 
-    return SUCCESS;
+    // in case of write failure, just clear the vec
+    m_output_vec.clear();
+
+    return ec.value();
 }
+
+bool ProxySession::WriteAll(FileDesc& dest, const RSlice& data, std::error_code &ec)
+{
+    RSlice slice(data);
+
+    while(!slice.IsEmpty())
+    {
+        auto numWritten = write(dest, slice, slice.Size());
+
+        if (numWritten <= 0) {
+            ec = std::error_code(errno, std::system_category());
+            return false;
+        }
+
+        slice.Advance(numWritten);
+    }
+
+    return true;
+}
+
 
 bool ProxySession::RegisterForDataAvailable(const FileDesc& epoll_fd, const FileDesc& fd, std::error_code &ec)
 {
@@ -141,9 +169,10 @@ bool ProxySession::RegisterForDataAvailable(const FileDesc& epoll_fd, const File
 
 bool ProxySession::Modify(const FileDesc& epoll_fd, int operation, const FileDesc& fd, uint32_t events, std::error_code &ec)
 {
-    epoll_event evt;
-    evt.events = EPOLLIN;
-    evt.data.fd = fd;
+    epoll_event evt = {
+            .events = events,
+            { .fd = fd }
+    };
 
     if (epoll_ctl(epoll_fd, operation, fd, &evt) < 0)
     {
@@ -164,13 +193,13 @@ FileDesc ProxySession::Connect(std::error_code& ec)
     }
 
     struct sockaddr_in serveraddr;
-    serveraddr.sin_addr.s_addr = m_config.address.s_addr;
+    serveraddr.sin_addr.s_addr = m_config.client.address.s_addr;
     serveraddr.sin_family = AF_INET;
-    serveraddr.sin_port = htons(m_config.port );
+    serveraddr.sin_port = htons(m_config.client.port );
 
     char buffer[INET_ADDRSTRLEN];
     auto address = inet_ntop(AF_INET, &serveraddr.sin_addr, buffer, INET_ADDRSTRLEN);
-    LOG(INFO) << "Initiating connection to " << address << ":" << m_config.port;
+    LOG(INFO) << "Initiating connection to " << address << ":" << m_config.client.port;
 
     auto res = connect(client_fd, (struct sockaddr *)&serveraddr, sizeof(serveraddr));
 
@@ -180,7 +209,7 @@ FileDesc ProxySession::Connect(std::error_code& ec)
             return FileDesc();
     }
 
-    LOG(INFO) << "Connected to " << address << ":" << m_config.port;
+    LOG(INFO) << "Connected to " << address << ":" << m_config.client.port;
 
     return client_fd;
 }

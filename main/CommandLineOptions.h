@@ -26,6 +26,9 @@ namespace proxy  {
         TCLAP::ValueArg<std::string> connectHost;
 
         TCLAP::ValueArg<std::string> parser;
+
+        TCLAP::SwitchArg observeOnly;
+        TCLAP::SwitchArg exitAfterSession;
     };
 
 }

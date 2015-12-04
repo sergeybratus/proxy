@@ -20,9 +20,9 @@ namespace proxy
     {
         public:
 
-            ProxySession(const EndpointConfig& config, FileDesc& server_fd, IParserFactory& factory);
+            ProxySession(const ProxyConfig& config, FileDesc& server_fd, IParserFactory& factory);
 
-            void Run();
+            void Run(std::error_code& ec);
 
         private:
 
@@ -40,9 +40,13 @@ namespace proxy
             bool RunOne(FileDesc& epoll_fd, FileDesc& client_fd, std::error_code &ec);
             bool Transfer(FileDesc& src, FileDesc& dest, IParser& parser, std::error_code &ec);
 
+            bool WriteOutputTo(FileDesc& dest, std::error_code &ec);
+
+            static bool WriteAll(FileDesc& dest, const RSlice& data, std::error_code &ec);
+
             /// ---- private members ----
 
-            const EndpointConfig m_config;
+            const ProxyConfig m_config;
             FileDesc m_server_fd;
 
             // a parser for each direction of the stream

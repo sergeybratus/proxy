@@ -28,9 +28,16 @@ class ProxyConfig
 {    
   
 public:
+
+  ProxyConfig() : observeOnly(false), exitAfterSession(false)
+  {}
   
   EndpointConfig server;
   EndpointConfig client;
+
+  bool observeOnly;
+  bool exitAfterSession;
+
 };
     
 }

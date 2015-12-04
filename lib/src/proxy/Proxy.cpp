@@ -29,11 +29,23 @@ bool Proxy::Run(std::error_code& ec)
       // For the time being, just handle one connection in a blocking manner
       // until we've reached a PoC stage
 
-      ProxySession session(config.client, server_fd, factory);
-      session.Run();
+      ProxySession session(config, server_fd, factory);
+
+      std::error_code session_ec;
+      session.Run(session_ec);
+
+      if(session_ec)
+      {
+          LOG(INFO) << "session terminated b/c: " << session_ec.message();
+      }
+
+      if(config.exitAfterSession)
+      {
+          break;
+      }
   }
 
-  return false;
+  return ec.value();
 }
 
 FileDesc Proxy::AcceptConnection(const FileDesc& listen_fd, std::error_code& ec)

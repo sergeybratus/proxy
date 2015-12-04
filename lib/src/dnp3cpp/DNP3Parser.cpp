@@ -50,7 +50,7 @@ void DNP3Parser::OnLinkFrame(void *env, const DNP3_Frame *frame, const uint8_t *
 
     // TODO - correct log level - should we use the formatting function here?
     char* output = dnp3_format_frame(frame);
-    LOG(TRACE) << parser->m_dir << output;
+    LOG(INFO) << parser->m_dir << output;
     free(output);
 
     if(frame->func == DNP3_UNCONFIRMED_USER_DATA ||
@@ -83,7 +83,7 @@ void DNP3Parser::OnAppFragment(void *env, const DNP3_Fragment *fragment, const u
     // TODO - correct log level- can we get a lighter level of inspection
     // and make doing this dependent on logging being enabled?
     char* output = dnp3_format_fragment(fragment);
-    LOG(TRACE) << parser->m_dir << output;
+    LOG(INFO) << parser->m_dir << output;
     free(output);
 
     parser->m_callbacks.QueueWrite(RSlice(buf, len));

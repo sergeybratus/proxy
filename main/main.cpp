@@ -31,6 +31,16 @@ int main (int argc, char *argv[])
 
     auto factory = GetFactory(options.parser.getValue());
 
+    if(config.observeOnly)
+    {
+        LOG(WARNING) << "Proxy is in OBSERVE ONLY mode";
+    }
+
+    if(config.exitAfterSession)
+    {
+        LOG(WARNING) << "Proxy will EXIT after processing a single TCP session";
+    }
+
 	proxy::Run(config, *factory, ec);
 	
 	if(ec)

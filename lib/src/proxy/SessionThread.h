@@ -16,7 +16,7 @@ namespace proxy
     {
         public:
 
-            SessionThread(const EndpointConfig& config, FileDesc& server_fd, IParserFactory& factory);
+            SessionThread(const ProxyConfig& config, FileDesc& server_fd, IParserFactory& factory);
 
         private:
 
