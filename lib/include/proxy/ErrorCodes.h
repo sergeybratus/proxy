@@ -11,7 +11,8 @@ namespace proxy
        SERVER_LISTEN_ERROR,      // A previously listening server socket has encountered an error
        EPOLL_SOCKET_ERR,         // epoll returned an error for an open socket
        INVALID_IPV4_ADDRESS,     // Invalid IPv4 address
-       END_OF_FILE               // read() returned 0
+       END_OF_FILE,              // read() returned 0
+       PARSER_REJECT             // parser plugin actively rejected input
     };
 
     class ProxyErrorCategory final : public std::error_category

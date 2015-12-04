@@ -19,6 +19,8 @@ namespace proxy
                 return "Invalid IPv4 address";
             case(static_cast<int>(Error::END_OF_FILE)):
                 return "read() returned 0";
+            case(static_cast<int>(Error::PARSER_REJECT)):
+                return "parser plugin actively rejected input";
             default:
                 return "Unknown error";
         }

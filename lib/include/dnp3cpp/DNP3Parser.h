@@ -35,9 +35,15 @@ namespace proxy { namespace  dnp3 {
             static void OnAppFragment(void *env, const DNP3_Fragment *fragment, const uint8_t *buf, size_t len);
             static void OnLogError(void *env, const char *fmt, ...);
 
+            static const char* ParseErrorToString(DNP3_ParseError pe);
+
             const char* m_dir;
             IParserCallbacks& m_callbacks;
             StreamProcessor* m_plugin;
+
+            // this is a bit of a hack since the underlying parser doesn't return an error code
+            // we track the state of the parse using this flag
+            bool m_parse_valid;
     };
 
 }}

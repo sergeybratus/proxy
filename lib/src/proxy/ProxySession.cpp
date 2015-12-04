@@ -106,22 +106,34 @@ bool ProxySession::Transfer(FileDesc& src, FileDesc& dest, IParser& parser, std:
             return false;
     }
 
-    // now notify the parser that we wrote some data into its input buffer
-    const bool SUCCESS = parser.Parse(numRead);
 
-    // in observe only mode we ignore what the parser tells us to write,
-    // and just write the input buffer back out ourselves
-    if(m_config.observeOnly) {
+    if(m_config.observeOnly)
+    {
+        // in observe only mode we just write the data we read immediately
+        // there is no guarantee that the parser doesn't modify the buffer
 
-        this->m_output_vec.clear();
         this->WriteAll(dest, RSlice(inBuff, numRead), ec);
-    }
-    else {
 
-        // otherwise we rely on the plugin to tell us what to write out
-        // TODO - Do we even want to write the output if SUCCESS is false?
-        this->WriteOutputTo(dest, ec);
+        // regardless of if there is any error or not, we feed the parser
+        // but ignore whatever it outputs
+        parser.Parse(numRead);
     }
+    else
+    {
+        // now notify the parser that we wrote some data into its input buffer
+        if(parser.Parse(numRead))
+        {
+            // if the parser didn't reject it, pass output anything the parser kicked back
+            this->WriteOutputTo(dest, ec);
+        }
+        else
+        {
+            ec = Error::PARSER_REJECT;
+        }
+    }
+
+    // always clear any unwritten slices due to error or explicit parser rejection
+    this->m_output_vec.clear();
 
     return ec.value();
 }
@@ -144,18 +156,18 @@ bool ProxySession::WriteOutputTo(FileDesc& dest, std::error_code &ec)
 
 bool ProxySession::WriteAll(FileDesc& dest, const RSlice& data, std::error_code &ec)
 {
-    RSlice slice(data);
+    RSlice remaining(data);
 
-    while(!slice.IsEmpty())
+    while(!remaining.IsEmpty())
     {
-        auto numWritten = write(dest, slice, slice.Size());
+        auto num = write(dest, remaining, remaining.Size());
 
-        if (numWritten <= 0) {
+        if (num <= 0) {
             ec = std::error_code(errno, std::system_category());
             return false;
         }
 
-        slice.Advance(numWritten);
+        remaining.Advance(num);
     }
 
     return true;
