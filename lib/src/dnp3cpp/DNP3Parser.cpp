@@ -40,7 +40,8 @@ DNP3_Callbacks DNP3Parser::GetCallbacks()
             .transport_segment = &DNP3Parser::OnTransportSegment,
             .transport_payload = &DNP3Parser::OnTransportPayload,
             .app_invalid = &DNP3Parser::OnAppInvalid,
-            .app_fragment = &DNP3Parser::OnAppFragment
+            .app_fragment = &DNP3Parser::OnAppFragment,
+            .log_error = &DNP3Parser::OnLogError
     };
 }
 
