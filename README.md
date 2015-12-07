@@ -2,6 +2,8 @@
 
 A simple proxy for prototyping hammer-based parsing of DNP3. The main program is called "proxyd".
 
+Internal architecture is documented [on the wiki](https://github.com/automatak/proxy/wiki) to help with elfbac integration.
+
 # building
 
 The program uses [cmake](https://cmake.org) to generate makefiles.
