@@ -48,6 +48,7 @@ bool DNP3Parser::Parse(size_t num)
 DNP3_Callbacks DNP3Parser::GetCallbacks()
 {
     return DNP3_Callbacks {
+            .link_invalid = &DNP3Parser::OnLinkInvalid,
             .link_frame = &DNP3Parser::OnLinkFrame,
             .transport_segment = &DNP3Parser::OnTransportSegment,
             .transport_payload = &DNP3Parser::OnTransportPayload,
@@ -72,6 +73,15 @@ void DNP3Parser::OnLinkFrame(void *env, const DNP3_Frame *frame, const uint8_t *
     }
 
     parser->m_callbacks.QueueWrite(RSlice(buf, len));
+}
+
+void DNP3Parser::OnLinkInvalid(void *env, const DNP3_Frame *frame)
+{
+    auto parser = reinterpret_cast<DNP3Parser*>(env);
+
+    parser->m_parse_valid = false;
+
+    LOG(ERROR) << "invalid link layer frame";
 }
 
 void DNP3Parser::OnTransportSegment(void *env, const DNP3_Segment *segment)
