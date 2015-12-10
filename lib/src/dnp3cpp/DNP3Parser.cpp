@@ -51,6 +51,7 @@ DNP3_Callbacks DNP3Parser::GetCallbacks()
             .link_invalid = &DNP3Parser::OnLinkInvalid,
             .link_frame = &DNP3Parser::OnLinkFrame,
             .transport_segment = &DNP3Parser::OnTransportSegment,
+            .transport_discard = &DNP3Parser::OnTransportDiscard,
             .transport_payload = &DNP3Parser::OnTransportPayload,
             .app_invalid = &DNP3Parser::OnAppInvalid,
             .app_fragment = &DNP3Parser::OnAppFragment,
@@ -87,6 +88,15 @@ void DNP3Parser::OnLinkInvalid(void *env, const DNP3_Frame *frame)
 void DNP3Parser::OnTransportSegment(void *env, const DNP3_Segment *segment)
 {
     // -- TODO -- logging?
+}
+
+void DNP3Parser::OnTransportDiscard(void *env, size_t n)
+{
+    auto parser = reinterpret_cast<DNP3Parser*>(env);
+
+    parser->m_parse_valid = false;
+
+    LOG(ERROR) << "Transport segment discarded w/ length: " << n;
 }
 
 void DNP3Parser::OnTransportPayload(void *env, const uint8_t *s, size_t n)
