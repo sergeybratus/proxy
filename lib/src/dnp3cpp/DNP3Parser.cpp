@@ -59,7 +59,7 @@ DNP3_Callbacks DNP3Parser::GetCallbacks()
     };
 }
 
-void DNP3Parser::OnLinkFrame(void *env, const DNP3_Frame *frame, const uint8_t *buf, size_t len)
+int DNP3Parser::OnLinkFrame(void *env, const DNP3_Frame *frame, const uint8_t *buf, size_t len)
 {
     auto parser = reinterpret_cast<DNP3Parser*>(env);
 
@@ -70,10 +70,11 @@ void DNP3Parser::OnLinkFrame(void *env, const DNP3_Frame *frame, const uint8_t *
 
     if(frame->func == DNP3_UNCONFIRMED_USER_DATA ||
        frame->func == DNP3_CONFIRMED_USER_DATA) {
-        return;
+        return 0;
     }
 
     parser->m_callbacks.QueueWrite(RSlice(buf, len));
+    return 0;
 }
 
 void DNP3Parser::OnLinkInvalid(void *env, const DNP3_Frame *frame)

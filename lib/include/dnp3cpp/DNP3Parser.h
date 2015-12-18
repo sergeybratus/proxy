@@ -28,7 +28,7 @@ namespace proxy { namespace  dnp3 {
 
             static DNP3_Callbacks GetCallbacks();
 
-            static void OnLinkFrame(void *env, const DNP3_Frame *frame, const uint8_t *buf, size_t len);
+            static int  OnLinkFrame(void *env, const DNP3_Frame *frame, const uint8_t *buf, size_t len);
             static void OnLinkInvalid(void *env, const DNP3_Frame *frame);
             static void OnTransportSegment(void *env, const DNP3_Segment *segment);
             static void OnTransportDiscard(void *env, size_t n);
