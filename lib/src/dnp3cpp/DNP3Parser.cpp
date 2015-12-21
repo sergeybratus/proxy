@@ -122,7 +122,7 @@ void DNP3Parser::OnAppFragment(void *env, const DNP3_Fragment *fragment, const u
 
     // TODO - correct log level- can we get a lighter level of inspection
     // and make doing this dependent on logging being enabled?
-    char* output = dnp3_format_fragment(fragment);
+    char* output = dnp3_format_fragment_ohdrs(fragment);
     LOG(INFO) << parser->m_dir << output;
     free(output);
 
