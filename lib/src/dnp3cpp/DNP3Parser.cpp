@@ -5,12 +5,10 @@
 
 namespace proxy { namespace  dnp3 {
 
-uint8_t input[4619];
-
-DNP3Parser::DNP3Parser(SessionDir dir, IParserCallbacks& callbacks) :\
+DNP3Parser::DNP3Parser(const WSlice& inputBuffer, SessionDir dir, IParserCallbacks& callbacks) :\
         m_dir(dir == SessionDir::ClientToServer ? " -c-> " : " <-s- "),
         m_callbacks(callbacks),
-        m_plugin(dnp3_dissector__b(input, sizeof(input), GetCallbacks(), this)),
+        m_plugin(dnp3_dissector__b(inputBuffer, inputBuffer.Size(), GetCallbacks(), this)),
         m_parse_valid(true)
 {
     if(m_plugin == nullptr)

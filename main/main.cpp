@@ -12,6 +12,11 @@ INITIALIZE_EASYLOGGINGPP
 
 using namespace proxy;
 
+// Input ("dirty") buffer for the parser.
+// This is so we can tag the buffer for the elfbac policy close to the program entry point.
+// In the future we'll likely pass the parser an abstract allocator instead of the raw buffer itself.
+uint8_t inputBuffer[4619];
+
 std::unique_ptr<IParserFactory> GetFactory(const std::string& name);
 
 int main (int argc, char *argv[])
@@ -60,7 +65,9 @@ std::unique_ptr<IParserFactory> GetFactory(const std::string& name)
     }
     else if(name == "dnp3")
     {
-        return std::unique_ptr<IParserFactory>(new dnp3::DNP3Factory());
+        return std::unique_ptr<IParserFactory>(
+                new dnp3::DNP3Factory(WSlice(inputBuffer, sizeof(inputBuffer)))
+        );
     }
     else
     {

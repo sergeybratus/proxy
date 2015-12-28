@@ -5,7 +5,7 @@
 
 namespace proxy { namespace  dnp3 {
 
-DNP3Factory::DNP3Factory()
+DNP3Factory::DNP3Factory(const WSlice& input_buffer) : m_input_buffer(input_buffer)
 {
     static bool initialized = false;
 
@@ -19,7 +19,7 @@ DNP3Factory::DNP3Factory()
 
 std::unique_ptr<IParser> DNP3Factory::Create(SessionDir dir, IParserCallbacks& callbacks)
 {
-    return std::unique_ptr<IParser>(new DNP3Parser(dir, callbacks));
+    return std::unique_ptr<IParser>(new DNP3Parser(m_input_buffer, dir, callbacks));
 }
 
 }}

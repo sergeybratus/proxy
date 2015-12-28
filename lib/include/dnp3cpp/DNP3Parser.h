@@ -13,7 +13,7 @@ namespace proxy { namespace  dnp3 {
 
             friend class DNP3Factory;
 
-            DNP3Parser(SessionDir dir, IParserCallbacks& callbacks);
+            DNP3Parser(const WSlice& inputBuffer, SessionDir dir, IParserCallbacks& callbacks);
 
         public:
 

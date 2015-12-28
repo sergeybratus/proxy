@@ -11,9 +11,13 @@ namespace proxy { namespace  dnp3 {
 
     public:
 
-        DNP3Factory();
+        DNP3Factory(const WSlice& input_buffer);
 
         virtual std::unique_ptr<IParser> Create(SessionDir dir, IParserCallbacks& callbacks) override;
+
+    private:
+
+        WSlice m_input_buffer;
     };
 
 }}
