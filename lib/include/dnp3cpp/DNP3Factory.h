@@ -4,6 +4,8 @@
 
 #include <plugin/ParserPlugin.h>
 
+#include <dnp3hammer.h>
+
 namespace proxy { namespace  dnp3 {
 
     class DNP3Factory final : public IParserFactory
@@ -11,13 +13,19 @@ namespace proxy { namespace  dnp3 {
 
     public:
 
-        DNP3Factory(const WSlice& input_buffer);
+        DNP3Factory( HAllocator *mm_input,
+                     HAllocator *mm_parse,
+                     HAllocator *mm_context,
+                     HAllocator *mm_results);
 
         virtual std::unique_ptr<IParser> Create(SessionDir dir, IParserCallbacks& callbacks) override;
 
     private:
 
-        WSlice m_input_buffer;
+        HAllocator *mm_input;
+        HAllocator *mm_parse;
+        HAllocator *mm_context;
+        HAllocator *mm_results;
     };
 
 }}

@@ -6,16 +6,26 @@
 #include "CommandLineOptions.h"
 #include "easylogging++.h"
 
-
-
 INITIALIZE_EASYLOGGINGPP
 
 using namespace proxy;
 
-// Input ("dirty") buffer for the parser.
-// This is so we can tag the buffer for the elfbac policy close to the program entry point.
-// In the future we'll likely pass the parser an abstract allocator instead of the raw buffer itself.
-uint8_t inputBuffer[4619];
+/// Static buffers for the elfbac policy
+/// All of these
+
+uint8_t input_buff[5*1024];
+
+uint8_t parse_buff[3*1024*1024];
+
+uint8_t context_buff[3*1024];
+
+uint8_t result_buff[3*1024];
+
+// SLOB allocators built on top of the static buffers
+static HAllocator *mm_input = nullptr;
+static HAllocator *mm_parse = nullptr;
+static HAllocator *mm_context = nullptr;
+static HAllocator *mm_results = nullptr;
 
 std::unique_ptr<IParserFactory> GetFactory(const std::string& name);
 
@@ -65,8 +75,23 @@ std::unique_ptr<IParserFactory> GetFactory(const std::string& name)
     }
     else if(name == "dnp3")
     {
+        dnp3_init();
+        LOG(INFO) << "completed dnp3/hammer parser initialization";
+
+        // TODO - how/when do these get freed?
+        mm_input = h_sloballoc(input_buff, sizeof(input_buff));
+        mm_parse = h_sloballoc(parse_buff, sizeof(parse_buff));
+        mm_context = h_sloballoc(context_buff, sizeof(context_buff));
+        mm_results = h_sloballoc(result_buff, sizeof(result_buff));
+
+        // TODO  - check these individually
+        if(!(mm_input && mm_parse && mm_context && mm_results))
+        {
+            LOG(ERROR) << "Allocator init failure";
+        }
+
         return std::unique_ptr<IParserFactory>(
-                new dnp3::DNP3Factory(WSlice(inputBuffer, sizeof(inputBuffer)))
+                new dnp3::DNP3Factory(mm_input, mm_parse, mm_context, mm_results)
         );
     }
     else
