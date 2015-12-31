@@ -10,14 +10,22 @@ INITIALIZE_EASYLOGGINGPP
 
 using namespace proxy;
 
-/// Static buffers for the elfbac policy
-/// All of these
+/*
+    Static buffers for the elfbac policy
+    We need some profiling numbers to appropriately size these
+    These are sized non-scientifically ATM
+*/
 
-uint8_t input_buff[5*1024];
+// This is set to 2 b/c we need a dissector in each direction
+// If we supported simultaneous connections, we'd have to size
+// this further
+const int NUM_DISSECTOR = 2;
 
-uint8_t parse_buff[3*1024*1024];
+uint8_t input_buff[5*1024*NUM_DISSECTOR];
 
-uint8_t context_buff[3*1024];
+uint8_t parse_buff[20*1024*1024];
+
+uint8_t context_buff[10*1024*NUM_DISSECTOR];
 
 uint8_t result_buff[3*1024];
 
@@ -87,8 +95,10 @@ std::unique_ptr<IParserFactory> GetFactory(const std::string& name)
         // TODO  - check these individually
         if(!(mm_input && mm_parse && mm_context && mm_results))
         {
-            LOG(ERROR) << "Allocator init failure";
+            throw std::logic_error("Allocator init failure");
         }
+
+        LOG(INFO) << "completed SLOB allocator initialization";
 
         return std::unique_ptr<IParserFactory>(
                 new dnp3::DNP3Factory(mm_input, mm_parse, mm_context, mm_results)
